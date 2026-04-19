@@ -9,7 +9,20 @@ import rospy
 from cv_bridge import CvBridge, CvBridgeError
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
-
+#cd ~/bsnew/catkin_ws
+#source /opt/ros/<ros1_distro>/setup.bash
+#catkin_make
+#source devel/setup.bash
+#roslaunch robot_vision seam_tracking.launch run_base_control:=true model_path:=../yolo/runs/train/exp17/weights/best.pt
+#cd ~/bsnew/catkin_ws
+#source /opt/ros/melodic/setup.bash
+#catkin_make
+#source devel/setup.bash
+#roslaunch robot_vision seam_tracking.launch run_base_control:=true model_path:=../yolo/runs/train/exp17/weights/best.pt
+#cd ~/bsnew/catkin_ws
+#source /opt/ros/melodic/setup.bash
+#source devel/setup.bash
+#roslaunch robot_vision seam_tracking.launch run_base_control:=false use_fake_camera:=true fake_image_path:=$(rospack find robot_vision)/data/bingda.png model_path:=../yolo/runs/train/exp17/weights/best.pt
 
 class YoloSeamDetector(object):
     def __init__(self):
