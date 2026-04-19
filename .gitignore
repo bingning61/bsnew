@@ -1,0 +1,45 @@
+# VSCode
+.vscode/browse.vc.db
+.vscode/*.db
+.vscode/*.db-shm
+.vscode/*.db-wal
+.vscode/*.sqlite
+.vscode/*.sqlite3
+
+# Local agent/runtime files
+.codex
+
+# Catkin workspace build and devel directories
+catkin_ws/build/
+catkin_ws/devel/
+catkin_ws/install/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+eggs/
+*.egg
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# YOLO weights and large model files (optional, uncomment if needed)
+# *.pt
+# *.onnx
+# *.engine
+
+# Logs
+*.log

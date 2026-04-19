@@ -1,0 +1,68 @@
+<launch>
+    <!-- Core switch -->
+    <arg name="run_base_control" default="false" />
+    <arg name="use_fake_camera" default="false" />
+
+    <!-- Camera and topic -->
+    <arg name="robot_name" default="" />
+    <arg name="camera_tf" default="false" />
+    <arg name="device" default="video0" />
+    <arg name="fake_image_path" default="$(find robot_vision)/data/bingda.png" />
+    <arg name="image_topic" default="/image_raw" />
+    <arg name="cmd_vel_topic" default="cmd_vel" />
+
+    <!-- YOLO params -->
+    <arg name="model_path" default="" />
+    <arg name="yolo_repo_path" default="$(find robot_vision)/../../../../yolo" />
+    <arg name="center_topic" default="/seam_center" />
+    <arg name="result_topic" default="/result_image" />
+    <arg name="conf_threshold" default="0.25" />
+    <arg name="imgsz" default="640" />
+    <arg name="target_class_id" default="-1" />
+    <arg name="device_id" default="" />
+    <arg name="external_center_timeout" default="0.5" />
+
+    <!-- Optional chassis bridge -->
+    <group if="$(arg run_base_control)">
+        <include file="$(find base_control)/launch/base_control.launch">
+            <arg name="robot_name" value="$(arg robot_name)" />
+            <arg name="cmd_vel_topic" value="$(arg cmd_vel_topic)" />
+        </include>
+    </group>
+
+    <!-- Camera source -->
+    <group if="$(arg use_fake_camera)">
+        <node pkg="robot_vision" name="fake_camera" type="fake_camera.py" output="screen">
+            <param name="image_path" value="$(arg fake_image_path)" />
+        </node>
+    </group>
+
+    <group unless="$(arg use_fake_camera)">
+        <include file="$(find robot_vision)/launch/robot_camera.launch">
+            <arg name="robot_name" value="$(arg robot_name)" />
+            <arg name="camera_tf" value="$(arg camera_tf)" />
+            <arg name="device" value="$(arg device)" />
+        </include>
+    </group>
+
+    <!-- YOLO front-end -->
+    <node pkg="robot_vision" name="yolo_seam_detector" type="yolo_seam_detector.py" output="screen">
+        <param name="image_topic" value="$(arg image_topic)" />
+        <param name="center_topic" value="$(arg center_topic)" />
+        <param name="result_topic" value="$(arg result_topic)" />
+        <param name="model_path" value="$(arg model_path)" />
+        <param name="yolo_repo_path" value="$(arg yolo_repo_path)" />
+        <param name="conf_threshold" value="$(arg conf_threshold)" />
+        <param name="imgsz" value="$(arg imgsz)" />
+        <param name="target_class_id" value="$(arg target_class_id)" />
+        <param name="device" value="$(arg device_id)" />
+    </node>
+
+    <!-- Original controller with external center adapter mode -->
+    <node pkg="robot_vision" name="linefollow" type="line_detector.py" output="screen">
+        <param name="use_external_center" value="true" />
+        <param name="external_center_topic" value="$(arg center_topic)" />
+        <param name="external_center_timeout" value="$(arg external_center_timeout)" />
+        <remap from="cmd_vel" to="$(arg cmd_vel_topic)" />
+    </node>
+</launch>

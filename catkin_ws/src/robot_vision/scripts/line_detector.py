@@ -25,19 +25,21 @@ from dynamic_reconfigure.server import Server
 from robot_vision.cfg import line_hsvConfig
 # from robot_vision.cfg
 
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Twist, Point
 
 class line_follow:
     def __init__(self):    
         #define topic publisher and subscriber
         self.bridge = CvBridge()
-        self.image_sub = rospy.Subscriber("/image_raw", Image, self.callback)
         self.mask_pub = rospy.Publisher("/mask_image", Image, queue_size=1)
         self.result_pub = rospy.Publisher("/result_image", Image, queue_size=1)
         self.pub_cmd = rospy.Publisher('cmd_vel', Twist, queue_size=5)
-        self.srv = Server(line_hsvConfig,self.dynamic_reconfigure_callback)
+        self.srv = Server(line_hsvConfig, self.dynamic_reconfigure_callback)
         # get param from launch file 
-        self.test_mode = bool(rospy.get_param('~test_mode',False))
+        self.use_external_center = self.get_bool_param('~use_external_center', False)
+        self.external_center_topic = rospy.get_param('~external_center_topic', '/seam_center')
+        self.external_center_timeout = float(rospy.get_param('~external_center_timeout', 0.5))
+        self.test_mode = self.get_bool_param('~test_mode', False)
         self.h_lower = int(rospy.get_param('~h_lower',110))
         self.s_lower = int(rospy.get_param('~s_lower',50))
         self.v_lower = int(rospy.get_param('~v_lower',50))
@@ -47,6 +49,21 @@ class line_follow:
         self.v_upper = int(rospy.get_param('~v_upper',255))
         #line center point X Axis coordinate
         self.center_point = 0
+        self.last_external_center_time = rospy.Time(0)
+
+        if self.use_external_center:
+            self.center_sub = rospy.Subscriber(self.external_center_topic, Point, self.external_center_callback, queue_size=1)
+            self.center_watchdog = rospy.Timer(rospy.Duration(0.1), self.external_center_watchdog)
+            rospy.loginfo("Line follow uses external center topic: %s", self.external_center_topic)
+        else:
+            self.image_sub = rospy.Subscriber("/image_raw", Image, self.callback)
+            rospy.loginfo("Line follow uses HSV detector input from /image_raw")
+
+    def get_bool_param(self, key, default):
+        value = rospy.get_param(key, default)
+        if isinstance(value, bool):
+            return value
+        return str(value).lower() in ("1", "true", "yes", "on")
 
     def dynamic_reconfigure_callback(self,config,level):
         # update config param
@@ -57,6 +74,29 @@ class line_follow:
         self.s_upper = config.s_upper
         self.v_upper = config.v_upper
         return config
+
+    def publish_stop(self):
+        stop_twist = Twist()
+        self.pub_cmd.publish(stop_twist)
+
+    def external_center_callback(self, data):
+        image_width = float(data.y)
+        center_x = float(data.x)
+        valid = data.z > 0.5 and image_width > 0
+        if valid:
+            self.last_external_center_time = rospy.Time.now()
+            self.twist_calculate(image_width / 2.0, center_x)
+        else:
+            self.publish_stop()
+
+    def external_center_watchdog(self, _event):
+        if not self.use_external_center:
+            return
+        if self.last_external_center_time.to_sec() == 0:
+            self.publish_stop()
+            return
+        if (rospy.Time.now() - self.last_external_center_time).to_sec() > self.external_center_timeout:
+            self.publish_stop()
 
     def callback(self,data):
         # convert ROS topic to CV image formart
