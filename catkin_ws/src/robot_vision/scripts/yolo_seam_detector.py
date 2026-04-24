@@ -9,20 +9,6 @@ import rospy
 from cv_bridge import CvBridge, CvBridgeError
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
-#cd ~/bsnew/catkin_ws
-#source /opt/ros/<ros1_distro>/setup.bash
-#catkin_make
-#source devel/setup.bash
-#roslaunch robot_vision seam_tracking.launch run_base_control:=true model_path:=../yolo/runs/train/exp17/weights/best.pt
-#cd ~/bsnew/catkin_ws
-#source /opt/ros/melodic/setup.bash
-#catkin_make
-#source devel/setup.bash
-#roslaunch robot_vision seam_tracking.launch run_base_control:=true model_path:=../yolo/runs/train/exp17/weights/best.pt
-#cd ~/bsnew/catkin_ws
-#source /opt/ros/melodic/setup.bash
-#source devel/setup.bash
-#roslaunch robot_vision seam_tracking.launch run_base_control:=false use_fake_camera:=true fake_image_path:=$(rospack find robot_vision)/data/bingda.png model_path:=../yolo/runs/train/exp17/weights/best.pt
 
 class YoloSeamDetector(object):
     def __init__(self):
@@ -35,11 +21,22 @@ class YoloSeamDetector(object):
         self.imgsz = int(rospy.get_param("~imgsz", 640))
         self.target_class_id = int(rospy.get_param("~target_class_id", -1))
         self.publish_result_image = self.get_bool_param("~publish_result_image", True)
-        self.model_path = rospy.get_param("~model_path", "")
+        self.backend = str(rospy.get_param("~backend", "yolov5")).strip()
+        self.model_path = rospy.get_param("~model_path", self.default_model_path())
+        self.yolov5_repo_path = rospy.get_param("~yolov5_repo_path", self.default_yolov5_repo_path())
         self.yolo_repo_path = rospy.get_param("~yolo_repo_path", self.default_yolo_repo_path())
-        self.device = rospy.get_param("~device", "")
+        self.iou_threshold = float(rospy.get_param("~iou_threshold", 0.45))
+        self.device = rospy.get_param("~device", "cpu")
         self.verbose = self.get_bool_param("~verbose", False)
 
+        self.device_obj = None
+        self.stride = None
+        self.imgsz_checked = self.imgsz
+        self.letterbox = None
+        self.non_max_suppression = None
+        self.scale_coords = None
+        self.torch = None
+        self.np = None
         self.model = self.load_model()
 
         self.center_pub = rospy.Publisher(self.center_topic, Point, queue_size=1)
@@ -48,7 +45,13 @@ class YoloSeamDetector(object):
             self.result_pub = rospy.Publisher(self.result_topic, Image, queue_size=1)
 
         self.image_sub = rospy.Subscriber(self.image_topic, Image, self.image_callback, queue_size=1, buff_size=2 ** 24)
-        rospy.loginfo("YOLO seam detector started. model=%s", self.model_path)
+        rospy.loginfo("YOLO seam detector started. backend=%s model=%s", self.backend, self.model_path)
+
+    def default_model_path(self):
+        return "/home/bn/bsnew/models/seam_best.pt"
+
+    def default_yolov5_repo_path(self):
+        return "/home/bn/bsnew/yolov5"
 
     def default_yolo_repo_path(self):
         scripts_dir = os.path.dirname(os.path.abspath(__file__))
@@ -61,12 +64,73 @@ class YoloSeamDetector(object):
         return str(value).lower() in ("1", "true", "yes", "on")
 
     def load_model(self):
+        if self.backend == "yolov5":
+            return self.load_yolov5_model()
+        elif self.backend == "legacy_ultralytics":
+            return self.load_legacy_ultralytics_model()
+        else:
+            rospy.logfatal("Unsupported detector backend: %s", self.backend)
+            raise RuntimeError("Unsupported detector backend")
+
+    def require_model_file(self):
         if not self.model_path:
             rospy.logfatal("~model_path is empty. Please set YOLO weight path.")
             raise RuntimeError("~model_path is empty")
         if not os.path.isfile(self.model_path):
-            rospy.logfatal("YOLO model file does not exist: %s", self.model_path)
-            raise RuntimeError("YOLO model file does not exist")
+            rospy.logfatal("model file does not exist: %s", self.model_path)
+            raise RuntimeError("model file does not exist")
+
+    def load_yolov5_model(self):
+        self.require_model_file()
+
+        if not self.yolov5_repo_path or not os.path.isdir(self.yolov5_repo_path):
+            rospy.logfatal("YOLOv5 repo path does not exist: %s", self.yolov5_repo_path)
+            raise RuntimeError("YOLOv5 repo path does not exist")
+
+        if self.yolov5_repo_path not in sys.path:
+            sys.path.insert(0, self.yolov5_repo_path)
+
+        try:
+            import numpy as np
+            import torch
+            try:
+                from utils.augmentations import letterbox
+            except ImportError:
+                from utils.datasets import letterbox
+            from models.experimental import attempt_load
+            from utils.general import non_max_suppression, scale_coords, check_img_size
+            from utils.torch_utils import select_device
+        except Exception as exc:
+            rospy.logfatal("Failed to import YOLOv5 modules from %s: %s", self.yolov5_repo_path, str(exc))
+            raise RuntimeError("Failed to import YOLOv5 modules")
+
+        try:
+            self.device_obj = select_device(self.device)
+            model = attempt_load(self.model_path, map_location=self.device_obj)
+            model.eval()
+            self.stride = int(model.stride.max())
+            self.imgsz_checked = check_img_size(self.imgsz, s=self.stride)
+        except Exception as exc:
+            rospy.logfatal("Failed to load YOLOv5 model: %s", str(exc))
+            raise RuntimeError("Failed to load YOLOv5 model")
+
+        self.np = np
+        self.torch = torch
+        self.letterbox = letterbox
+        self.non_max_suppression = non_max_suppression
+        self.scale_coords = scale_coords
+
+        rospy.loginfo(
+            "Loaded YOLOv5 backend. repo=%s device=%s imgsz=%s stride=%s",
+            self.yolov5_repo_path,
+            self.device,
+            self.imgsz_checked,
+            self.stride,
+        )
+        return model
+
+    def load_legacy_ultralytics_model(self):
+        self.require_model_file()
 
         if self.yolo_repo_path and os.path.isdir(os.path.join(self.yolo_repo_path, "ultralytics")):
             if self.yolo_repo_path not in sys.path:
@@ -105,6 +169,55 @@ class YoloSeamDetector(object):
 
         return best_box, best_conf, best_cls
 
+    def run_yolov5_inference(self, cv_image):
+        img0 = cv_image
+        img = self.letterbox(img0, self.imgsz_checked, stride=self.stride, auto=True)[0]
+        img = img[:, :, ::-1].transpose(2, 0, 1)
+        img = self.np.ascontiguousarray(img)
+        img = self.torch.from_numpy(img).to(self.device_obj)
+        img = img.float()
+        img /= 255.0
+        if img.ndimension() == 3:
+            img = img.unsqueeze(0)
+
+        with self.torch.no_grad():
+            pred = self.model(img, augment=False)[0]
+
+        classes = None if self.target_class_id < 0 else [self.target_class_id]
+        pred = self.non_max_suppression(
+            pred,
+            conf_thres=self.conf_threshold,
+            iou_thres=self.iou_threshold,
+            classes=classes,
+            agnostic=False,
+        )
+
+        det = pred[0]
+        if det is not None and len(det):
+            det[:, :4] = self.scale_coords(img.shape[2:], det[:, :4], img0.shape).round()
+            best_det = det[det[:, 4].argmax()]
+            xyxy = best_det[:4].tolist()
+            best_box = (float(xyxy[0]), float(xyxy[1]), float(xyxy[2]), float(xyxy[3]))
+            best_conf = float(best_det[4].item())
+            best_cls = int(best_det[5].item())
+            return best_box, best_conf, best_cls
+
+        return None, 0.0, -1
+
+    def run_legacy_ultralytics_inference(self, cv_image):
+        predict_args = {
+            "source": cv_image,
+            "conf": self.conf_threshold,
+            "imgsz": self.imgsz,
+            "verbose": self.verbose,
+        }
+        if self.device:
+            predict_args["device"] = self.device
+        results = self.model.predict(**predict_args)
+        if results and len(results) > 0 and results[0].boxes is not None and len(results[0].boxes) > 0:
+            return self.find_best_box(results[0].boxes)
+        return None, 0.0, -1
+
     def image_callback(self, data):
         try:
             cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
@@ -118,19 +231,12 @@ class YoloSeamDetector(object):
         best_cls = -1
 
         try:
-            predict_args = {
-                "source": cv_image,
-                "conf": self.conf_threshold,
-                "imgsz": self.imgsz,
-                "verbose": self.verbose,
-            }
-            if self.device:
-                predict_args["device"] = self.device
-            results = self.model.predict(**predict_args)
-            if results and len(results) > 0 and results[0].boxes is not None and len(results[0].boxes) > 0:
-                best_box, best_conf, best_cls = self.find_best_box(results[0].boxes)
+            if self.backend == "yolov5":
+                best_box, best_conf, best_cls = self.run_yolov5_inference(cv_image)
+            elif self.backend == "legacy_ultralytics":
+                best_box, best_conf, best_cls = self.run_legacy_ultralytics_inference(cv_image)
         except Exception as exc:
-            rospy.logerr_throttle(1.0, "YOLO inference failed: %s", str(exc))
+            rospy.logerr_throttle(1.0, "%s inference failed: %s", self.backend, str(exc))
 
         debug_image = cv_image.copy()
         if best_box is not None:

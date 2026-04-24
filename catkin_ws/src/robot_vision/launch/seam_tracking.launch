@@ -6,20 +6,25 @@
     <!-- Camera and topic -->
     <arg name="robot_name" default="" />
     <arg name="camera_tf" default="false" />
-    <arg name="device" default="video0" />
+    <arg name="camera_device" default="video0" />
     <arg name="fake_image_path" default="$(find robot_vision)/data/bingda.png" />
     <arg name="image_topic" default="/image_raw" />
     <arg name="cmd_vel_topic" default="cmd_vel" />
 
     <!-- YOLO params -->
-    <arg name="model_path" default="" />
-    <arg name="yolo_repo_path" default="$(find robot_vision)/../../../../yolo" />
+    <arg name="detector_backend" default="yolov5" />
+    <arg name="model_path" default="/home/bn/bsnew/models/seam_best.pt" />
+    <arg name="yolov5_repo_path" default="/home/bn/bsnew/yolov5" />
+    <arg name="yolo_repo_path" default="/home/bn/bsnew/yolo" />
     <arg name="center_topic" default="/seam_center" />
     <arg name="result_topic" default="/result_image" />
     <arg name="conf_threshold" default="0.25" />
+    <arg name="iou_threshold" default="0.45" />
     <arg name="imgsz" default="640" />
     <arg name="target_class_id" default="-1" />
-    <arg name="device_id" default="" />
+    <arg name="device" default="cpu" />
+    <arg name="publish_result_image" default="true" />
+    <arg name="verbose" default="false" />
     <arg name="external_center_timeout" default="0.5" />
 
     <!-- Optional chassis bridge -->
@@ -41,7 +46,7 @@
         <include file="$(find robot_vision)/launch/robot_camera.launch">
             <arg name="robot_name" value="$(arg robot_name)" />
             <arg name="camera_tf" value="$(arg camera_tf)" />
-            <arg name="device" value="$(arg device)" />
+            <arg name="device" value="$(arg camera_device)" />
         </include>
     </group>
 
@@ -50,12 +55,17 @@
         <param name="image_topic" value="$(arg image_topic)" />
         <param name="center_topic" value="$(arg center_topic)" />
         <param name="result_topic" value="$(arg result_topic)" />
+        <param name="backend" value="$(arg detector_backend)" />
         <param name="model_path" value="$(arg model_path)" />
+        <param name="yolov5_repo_path" value="$(arg yolov5_repo_path)" />
         <param name="yolo_repo_path" value="$(arg yolo_repo_path)" />
         <param name="conf_threshold" value="$(arg conf_threshold)" />
+        <param name="iou_threshold" value="$(arg iou_threshold)" />
         <param name="imgsz" value="$(arg imgsz)" />
         <param name="target_class_id" value="$(arg target_class_id)" />
-        <param name="device" value="$(arg device_id)" />
+        <param name="device" value="$(arg device)" />
+        <param name="publish_result_image" value="$(arg publish_result_image)" />
+        <param name="verbose" value="$(arg verbose)" />
     </node>
 
     <!-- Original controller with external center adapter mode -->
