@@ -5,15 +5,13 @@ import os
 import sys
 
 import cv2
+import numpy as np
 import rospy
-from cv_bridge import CvBridge, CvBridgeError
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Image
 
 class YoloSeamDetector(object):
     def __init__(self):
-        self.bridge = CvBridge()
-
         self.image_topic = rospy.get_param("~image_topic", "/image_raw")
         self.center_topic = rospy.get_param("~center_topic", "/seam_center")
         self.result_topic = rospy.get_param("~result_topic", "/result_image")
@@ -161,6 +159,61 @@ class YoloSeamDetector(object):
         msg.z = 1.0 if valid else 0.0
         self.center_pub.publish(msg)
 
+    def ros_image_to_cv2(self, msg):
+        encoding = msg.encoding.lower()
+        if encoding in ("bgr8", "rgb8"):
+            channels = 3
+        elif encoding == "mono8":
+            channels = 1
+        else:
+            raise ValueError("Unsupported image encoding: %s" % msg.encoding)
+
+        valid_step = int(msg.width) * channels
+        row_step = int(msg.step)
+        if row_step < valid_step:
+            raise ValueError("Image step is smaller than width * channels")
+
+        if isinstance(msg.data, (bytes, bytearray)):
+            raw = np.frombuffer(msg.data, dtype=np.uint8)
+        else:
+            raw = np.asarray(msg.data, dtype=np.uint8)
+
+        required_size = int(msg.height) * row_step
+        if raw.size < required_size:
+            raise ValueError("Image data is shorter than height * step")
+
+        image = raw[:required_size].reshape((int(msg.height), row_step))
+        image = image[:, :valid_step]
+
+        if channels == 3:
+            image = image.reshape((int(msg.height), int(msg.width), 3)).copy()
+            if encoding == "rgb8":
+                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            return image
+
+        image = image.reshape((int(msg.height), int(msg.width))).copy()
+        return cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+
+    def cv2_to_ros_image(self, cv_image, header=None, encoding="bgr8"):
+        if encoding != "bgr8":
+            raise ValueError("Unsupported output encoding: %s" % encoding)
+        if cv_image.ndim != 3 or cv_image.shape[2] != 3:
+            raise ValueError("bgr8 output requires a 3-channel image")
+
+        image = np.ascontiguousarray(cv_image)
+        msg = Image()
+        if header is not None:
+            msg.header = header
+        else:
+            msg.header.stamp = rospy.Time.now()
+        msg.height = image.shape[0]
+        msg.width = image.shape[1]
+        msg.encoding = encoding
+        msg.is_bigendian = 0
+        msg.step = image.shape[1] * 3
+        msg.data = image.tobytes()
+        return msg
+
     def find_best_box(self, boxes):
         best_box = None
         best_conf = -1.0
@@ -230,9 +283,9 @@ class YoloSeamDetector(object):
 
     def image_callback(self, data):
         try:
-            cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-        except CvBridgeError as exc:
-            rospy.logerr("CV bridge conversion failed: %s", str(exc))
+            cv_image = self.ros_image_to_cv2(data)
+        except ValueError as exc:
+            rospy.logerr("ROS image conversion failed: %s", str(exc))
             return
 
         image_height, image_width = cv_image.shape[:2]
@@ -274,11 +327,10 @@ class YoloSeamDetector(object):
 
         if self.result_pub is not None:
             try:
-                img_msg = self.bridge.cv2_to_imgmsg(debug_image, encoding="bgr8")
-                img_msg.header.stamp = rospy.Time.now()
+                img_msg = self.cv2_to_ros_image(debug_image, data.header, "bgr8")
                 self.result_pub.publish(img_msg)
-            except CvBridgeError as exc:
-                rospy.logerr("CV bridge publish failed: %s", str(exc))
+            except ValueError as exc:
+                rospy.logerr("ROS image publish conversion failed: %s", str(exc))
 
 
 if __name__ == "__main__":
