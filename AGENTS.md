@@ -198,3 +198,16 @@ Before finishing:
 - remove dead code if it is clearly obsolete
 - keep old files if removing them would create risk
 - clearly mark the new primary entry path
+## Additional package in this repository
+There is an additional ROS1 package under:
+bsnew/catkin_ws/src/nanoomni_description/
+
+This package is a robot description / simulation-support package.
+It may contain URDF/Xacro, RViz, Gazebo, meshes, robot model descriptions, and simulation launch files.
+
+Rules:
+- do not treat nanoomni_description as the primary seam-tracking control package unless the code clearly shows it is part of the main runtime path
+- inspect it and document its role
+- preserve it
+- if it is only used for simulation/description, place it under system implementation / simulation support, not as the main control method
+- do not refactor it unless the task explicitly requires simulation-related fixes

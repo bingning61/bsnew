@@ -1,0 +1,351 @@
+{
+  "project_name": "基于 YOLO 视觉感知与中心偏差控制的 ROS1 焊缝跟踪机器人系统",
+  "project_goal": "从相机图像中检测焊缝目标，提取检测框中心作为位置表征量，构造目标中心与图像中心之间的偏差，并通过现有 cmd_vel 链路驱动机器人底盘实现焊缝跟踪与安全停止。",
+  "repo_layout": {
+    "repo_root": "bsnew/",
+    "ros_workspace": "bsnew/catkin_ws/",
+    "ros_packages_root": "bsnew/catkin_ws/src/",
+    "yolo_root": "bsnew/yolo/",
+    "reference_media": [
+      "bsnew/原视频.mp4",
+      "bsnew/识别视频.mp4"
+    ]
+  },
+  "ros_workspace": "catkin_ws",
+  "ros_packages": [
+    {
+      "name": "robot_vision",
+      "role": "主焊缝跟踪包",
+      "relevance": "primary",
+      "notes": "包含主 launch、YOLO 节点、控制节点、相机 launch 和视觉配置"
+    },
+    {
+      "name": "base_control",
+      "role": "底盘执行接口包",
+      "relevance": "primary",
+      "notes": "负责 cmd_vel 到串口协议、odom 和 battery 等反馈"
+    },
+    {
+      "name": "nanoomni_description",
+      "role": "URDF、Gazebo 传感器插件和机器人模型支撑包",
+      "relevance": "supporting",
+      "notes": "不是当前 seam_tracking 主入口，但可支撑第四章模型/仿真分析"
+    },
+    {
+      "name": "robot_simulation",
+      "role": "Stage 仿真包",
+      "relevance": "supporting",
+      "notes": "提供单车/双车与地图仿真，不是焊缝跟踪主链路"
+    },
+    {
+      "name": "robot_navigation",
+      "role": "通用导航、SLAM、定位与 move_base 支撑包",
+      "relevance": "secondary",
+      "notes": "未被 seam_tracking.launch 直接调用"
+    },
+    {
+      "name": "bingda_tutorials",
+      "role": "教学示例包",
+      "relevance": "secondary",
+      "notes": "不是论文主系统"
+    },
+    {
+      "name": "rplidar_ros",
+      "role": "雷达驱动包",
+      "relevance": "secondary",
+      "notes": "属于通用平台能力"
+    },
+    {
+      "name": "nvilidar_ros",
+      "role": "雷达驱动包",
+      "relevance": "secondary",
+      "notes": "属于通用平台能力"
+    },
+    {
+      "name": "sc_mini",
+      "role": "雷达驱动包",
+      "relevance": "secondary",
+      "notes": "属于通用平台能力"
+    }
+  ],
+  "yolo_module": {
+    "path": "yolo/",
+    "role": "本地 ultralytics 代码库与辅助训练脚本集合",
+    "runtime_relation": "robot_vision/scripts/yolo_seam_detector.py 通过 yolo_repo_path 导入本地 ultralytics",
+    "weight_files_present_in_repo": false,
+    "notes": [
+      "仓库中未发现实际 .pt 权重文件",
+      "README 和注释中引用了 ../yolo/runs/train/exp17/weights/best.pt 示例路径",
+      "train.py 指向外部 Windows 数据集路径，说明训练数据未随仓库提供"
+    ]
+  },
+  "launch_files": {
+    "primary": "catkin_ws/src/robot_vision/launch/seam_tracking.launch",
+    "legacy_control": "catkin_ws/src/robot_vision/launch/line_follow.launch",
+    "camera": "catkin_ws/src/robot_vision/launch/robot_camera.launch",
+    "base_control": "catkin_ws/src/base_control/launch/base_control.launch",
+    "simulation": [
+      "catkin_ws/src/nanoomni_description/launch/display.launch",
+      "catkin_ws/src/nanoomni_description/launch/simulation.launch",
+      "catkin_ws/src/nanoomni_description/launch/two_robot_simulation.launch",
+      "catkin_ws/src/robot_simulation/launch/simulation_one_robot.launch",
+      "catkin_ws/src/robot_simulation/launch/simulation_one_robot_with_map.launch"
+    ]
+  },
+  "config_files": [
+    {
+      "path": "catkin_ws/src/robot_vision/config/line_hsv.cfg",
+      "role": "旧 HSV 路径动态调参配置"
+    },
+    {
+      "path": "catkin_ws/src/robot_vision/config/astrapro.yaml",
+      "role": "相机标定参数"
+    },
+    {
+      "path": "catkin_ws/src/robot_vision/config/csi72.yaml",
+      "role": "相机标定参数"
+    },
+    {
+      "path": "catkin_ws/src/nanoomni_description/config/joint_names_nanoomni_description.yaml",
+      "role": "机器人模型配置"
+    }
+  ],
+  "nodes": [
+    {
+      "name": "yolo_seam_detector",
+      "package": "robot_vision",
+      "entry": "scripts/yolo_seam_detector.py",
+      "role": "焊缝目标检测与中心点输出",
+      "inputs": [
+        "/image_raw"
+      ],
+      "outputs": [
+        "/seam_center",
+        "/result_image"
+      ],
+      "evidence": "code_confirmed"
+    },
+    {
+      "name": "linefollow",
+      "package": "robot_vision",
+      "entry": "scripts/line_detector.py",
+      "role": "偏差构建与 cmd_vel 生成",
+      "inputs": [
+        "/seam_center or /image_raw"
+      ],
+      "outputs": [
+        "cmd_vel",
+        "/result_image",
+        "/mask_image"
+      ],
+      "evidence": "code_confirmed"
+    },
+    {
+      "name": "fake_camera",
+      "package": "robot_vision",
+      "entry": "scripts/fake_camera.py",
+      "role": "静态图像调试输入",
+      "inputs": [
+        "image_path parameter"
+      ],
+      "outputs": [
+        "/image_raw"
+      ],
+      "evidence": "code_confirmed"
+    },
+    {
+      "name": "uvc_camera",
+      "package": "uvc_camera",
+      "entry": "uvc_camera_node",
+      "role": "真实相机输入",
+      "inputs": [
+        "/dev/video0"
+      ],
+      "outputs": [
+        "/image_raw",
+        "/camera_info"
+      ],
+      "evidence": "code_confirmed"
+    },
+    {
+      "name": "base_control",
+      "package": "base_control",
+      "entry": "script/base_control.py",
+      "role": "cmd_vel 到底盘串口协议执行",
+      "inputs": [
+        "cmd_vel"
+      ],
+      "outputs": [
+        "odom",
+        "battery",
+        "imu(optional)",
+        "sonar_x(optional)"
+      ],
+      "evidence": "code_confirmed"
+    }
+  ],
+  "topics": [
+    {
+      "name": "/image_raw",
+      "type": "sensor_msgs/Image",
+      "producer": [
+        "uvc_camera",
+        "fake_camera",
+        "gazebo camera plugin (supporting)"
+      ],
+      "consumer": [
+        "yolo_seam_detector"
+      ]
+    },
+    {
+      "name": "/seam_center",
+      "type": "geometry_msgs/Point",
+      "producer": [
+        "yolo_seam_detector"
+      ],
+      "consumer": [
+        "linefollow"
+      ]
+    },
+    {
+      "name": "/result_image",
+      "type": "sensor_msgs/Image",
+      "producer": [
+        "yolo_seam_detector"
+      ],
+      "consumer": [
+        "debug viewers"
+      ]
+    },
+    {
+      "name": "cmd_vel",
+      "type": "geometry_msgs/Twist",
+      "producer": [
+        "linefollow"
+      ],
+      "consumer": [
+        "base_control",
+        "gazebo planar move plugin (supporting)"
+      ]
+    },
+    {
+      "name": "odom",
+      "type": "nav_msgs/Odometry",
+      "producer": [
+        "base_control",
+        "gazebo planar move plugin (supporting)",
+        "stage_ros (supporting)"
+      ],
+      "consumer": [
+        "monitoring or navigation stack"
+      ]
+    },
+    {
+      "name": "battery",
+      "type": "sensor_msgs/BatteryState",
+      "producer": [
+        "base_control"
+      ],
+      "consumer": [
+        "monitoring"
+      ]
+    }
+  ],
+  "main_data_flow": [
+    "真实相机或 fake_camera 发布 /image_raw",
+    "yolo_seam_detector 订阅 /image_raw 并进行 YOLO 推理",
+    "yolo_seam_detector 从最优检测框提取中心横坐标和图像宽度，发布 /seam_center",
+    "line_detector 在 use_external_center=true 模式下订阅 /seam_center",
+    "line_detector 以图像中心为参考构造偏差并生成 cmd_vel",
+    "base_control 订阅 cmd_vel 并通过串口 /dev/move_base 下发到底盘",
+    "机器人运动导致下一帧图像变化，闭环继续"
+  ],
+  "core_methods": [
+    "基于 YOLO 的焊缝目标感知与最优检测框筛选方法",
+    "基于检测框中心的目标位置表征方法",
+    "基于图像中心参考的偏差构建方法",
+    "基于归一化偏差的角速度生成方法",
+    "基于偏差大小的线速度协同调节方法",
+    "基于 ROS1 话题适配的感知到控制闭环实现方法",
+    "基于有效标志与超时监测的安全停止方法",
+    "基于 URDF、Gazebo 与 Stage 的模型和仿真支撑方法"
+  ],
+  "core_principles": [
+    "YOLO 负责视觉前端，不直接输出控制量，而是输出控制所需的最小几何量",
+    "检测框中心横坐标作为目标位置表征量，图像中心作为期望参考位置",
+    "控制器围绕图像中心偏差生成 angular.z 和 linear.x",
+    "cmd_vel 由原有底盘接口包执行，保持执行链路稳定",
+    "无检测和超时条件下采用保守停止策略"
+  ],
+  "control_logic": {
+    "reference_center": "x_ref = image_width / 2",
+    "position_representation": "Point.x = x_obj, Point.y = image_width, Point.z = valid_flag",
+    "normalized_error": "e_n = (x_ref - x_obj) / x_ref",
+    "angular_velocity": "angular.z = (x_ref - x_obj) / (2 * x_ref)",
+    "linear_velocity_rules": [
+      "if 0.95 < x_obj / x_ref < 1.05: linear.x = 0.2",
+      "else if abs(angular.z) < 0.2: linear.x = 0.2 - angular.z / 2",
+      "else: linear.x = 0.1"
+    ],
+    "safe_stop": [
+      "if valid_flag == 0: publish zero Twist",
+      "if external center timeout > 0.5s(default): publish zero Twist",
+      "base_control README states lower controller stops if no new protocol data for >1000ms"
+    ]
+  },
+  "completed_work": [
+    "已形成 seam_tracking.launch 主启动入口",
+    "已形成 YOLO 检测节点 yolo_seam_detector.py",
+    "已形成 /seam_center 视觉到控制的最小几何接口",
+    "已在 line_detector.py 中实现外部中心点模式",
+    "已保留原有 twist_calculate 控制主逻辑",
+    "已保留 base_control 的 cmd_vel 到底盘执行链路",
+    "已保留 fake_camera 静态图像调试路径",
+    "已保留旧 HSV 路径作为历史对照",
+    "已具备 URDF、Gazebo、Stage 等模型与仿真支撑资源"
+  ],
+  "limitations": [
+    "仓库中没有实际 YOLO 权重文件",
+    "训练数据与标签映射未提供",
+    "控制器使用简单比例式偏差调节，不是高级控制算法",
+    "位置表征仅使用检测框中心，粒度较粗",
+    "主链路混用了 python3 和 python 风格节点",
+    "缺少完整实机实验数据、截图和定量指标",
+    "缺少焊缝专用仿真场景与联调记录"
+  ],
+  "unknowns": [
+    "实际部署使用的 .pt 权重文件路径",
+    "焊缝目标类别编号和类别名称",
+    "实机底盘型号和相机型号",
+    "BASE_TYPE 和 CAMERA_TYPE 的真实取值",
+    "是否已经完成完整实机焊缝跟踪实验",
+    "真实实验中的识别精度和跟踪性能指标"
+  ],
+  "evidence_notes": [
+    {
+      "fact": "主启动入口为 seam_tracking.launch",
+      "source": "catkin_ws/src/robot_vision/launch/seam_tracking.launch",
+      "level": "code_confirmed"
+    },
+    {
+      "fact": "视觉中间接口为 /seam_center (geometry_msgs/Point)",
+      "source": "catkin_ws/src/robot_vision/scripts/yolo_seam_detector.py",
+      "level": "code_confirmed"
+    },
+    {
+      "fact": "控制器在外部中心模式下继续调用 twist_calculate",
+      "source": "catkin_ws/src/robot_vision/scripts/line_detector.py",
+      "level": "code_confirmed"
+    },
+    {
+      "fact": "底盘接口通过 /dev/move_base 串口执行速度命令",
+      "source": "catkin_ws/src/base_control/launch/base_control.launch and script/base_control.py",
+      "level": "code_confirmed"
+    },
+    {
+      "fact": "当前仓库未发现 .pt 权重文件",
+      "source": "workspace file search result",
+      "level": "code_confirmed"
+    }
+  ]
+}

@@ -45,17 +45,27 @@ class YoloSeamDetector(object):
             self.result_pub = rospy.Publisher(self.result_topic, Image, queue_size=1)
 
         self.image_sub = rospy.Subscriber(self.image_topic, Image, self.image_callback, queue_size=1, buff_size=2 ** 24)
-        rospy.loginfo("YOLO seam detector started. backend=%s model=%s", self.backend, self.model_path)
+        rospy.loginfo(
+            "YOLO seam detector started. backend=%s image_topic=%s center_topic=%s result_topic=%s model=%s",
+            self.backend,
+            self.image_topic,
+            self.center_topic,
+            self.result_topic,
+            self.model_path,
+        )
+
+    def default_project_root(self):
+        scripts_dir = os.path.dirname(os.path.abspath(__file__))
+        return os.path.normpath(os.path.join(scripts_dir, "..", "..", "..", ".."))
 
     def default_model_path(self):
-        return "/home/bn/bsnew/models/seam_best.pt"
+        return os.path.join(self.default_project_root(), "models", "seam_best.pt")
 
     def default_yolov5_repo_path(self):
-        return "/home/bn/bsnew/yolov5"
+        return os.path.join(self.default_project_root(), "yolov5")
 
     def default_yolo_repo_path(self):
-        scripts_dir = os.path.dirname(os.path.abspath(__file__))
-        return os.path.normpath(os.path.join(scripts_dir, "..", "..", "..", "..", "yolo"))
+        return os.path.join(self.default_project_root(), "yolo")
 
     def get_bool_param(self, key, default):
         value = rospy.get_param(key, default)
@@ -259,6 +269,7 @@ class YoloSeamDetector(object):
             )
         else:
             self.publish_center(-1.0, image_width, False)
+            rospy.logwarn_throttle(5.0, "No valid seam detection. Published invalid center and controller should stop.")
             cv2.putText(debug_image, "NO DETECTION", (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 2)
 
         if self.result_pub is not None:

@@ -13,9 +13,9 @@
 
     <!-- YOLO params -->
     <arg name="detector_backend" default="yolov5" />
-    <arg name="model_path" default="/home/bn/bsnew/models/seam_best.pt" />
-    <arg name="yolov5_repo_path" default="/home/bn/bsnew/yolov5" />
-    <arg name="yolo_repo_path" default="/home/bn/bsnew/yolo" />
+    <arg name="model_path" default="$(find robot_vision)/../../../models/seam_best.pt" />
+    <arg name="yolov5_repo_path" default="$(find robot_vision)/../../../yolov5" />
+    <arg name="yolo_repo_path" default="$(find robot_vision)/../../../yolo" />
     <arg name="center_topic" default="/seam_center" />
     <arg name="result_topic" default="/result_image" />
     <arg name="conf_threshold" default="0.25" />
