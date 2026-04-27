@@ -1,4 +1,4 @@
-material NanoOmni/SeamVideoTexture
+material NanoOmni/SeamCurvePatch01
 {
   technique
   {
@@ -11,7 +11,207 @@ material NanoOmni/SeamVideoTexture
 
       texture_unit
       {
-        texture seam_video_strip.png
+        texture seam_curve_patch_01.png
+        filtering trilinear
+      }
+    }
+  }
+}
+
+material NanoOmni/SeamCurvePatch02
+{
+  technique
+  {
+    pass
+    {
+      lighting on
+      ambient 1.0 1.0 1.0 1.0
+      diffuse 1.0 1.0 1.0 1.0
+      specular 0.05 0.05 0.05 1.0 8
+
+      texture_unit
+      {
+        texture seam_curve_patch_02.png
+        filtering trilinear
+      }
+    }
+  }
+}
+
+material NanoOmni/SeamCurvePatch03
+{
+  technique
+  {
+    pass
+    {
+      lighting on
+      ambient 1.0 1.0 1.0 1.0
+      diffuse 1.0 1.0 1.0 1.0
+      specular 0.05 0.05 0.05 1.0 8
+
+      texture_unit
+      {
+        texture seam_curve_patch_03.png
+        filtering trilinear
+      }
+    }
+  }
+}
+
+material NanoOmni/SeamCurvePatch04
+{
+  technique
+  {
+    pass
+    {
+      lighting on
+      ambient 1.0 1.0 1.0 1.0
+      diffuse 1.0 1.0 1.0 1.0
+      specular 0.05 0.05 0.05 1.0 8
+
+      texture_unit
+      {
+        texture seam_curve_patch_04.png
+        filtering trilinear
+      }
+    }
+  }
+}
+
+material NanoOmni/SeamCurvePatch05
+{
+  technique
+  {
+    pass
+    {
+      lighting on
+      ambient 1.0 1.0 1.0 1.0
+      diffuse 1.0 1.0 1.0 1.0
+      specular 0.05 0.05 0.05 1.0 8
+
+      texture_unit
+      {
+        texture seam_curve_patch_05.png
+        filtering trilinear
+      }
+    }
+  }
+}
+
+material NanoOmni/SeamCurvePatch06
+{
+  technique
+  {
+    pass
+    {
+      lighting on
+      ambient 1.0 1.0 1.0 1.0
+      diffuse 1.0 1.0 1.0 1.0
+      specular 0.05 0.05 0.05 1.0 8
+
+      texture_unit
+      {
+        texture seam_curve_patch_06.png
+        filtering trilinear
+      }
+    }
+  }
+}
+
+material NanoOmni/SeamCurvePatch07
+{
+  technique
+  {
+    pass
+    {
+      lighting on
+      ambient 1.0 1.0 1.0 1.0
+      diffuse 1.0 1.0 1.0 1.0
+      specular 0.05 0.05 0.05 1.0 8
+
+      texture_unit
+      {
+        texture seam_curve_patch_07.png
+        filtering trilinear
+      }
+    }
+  }
+}
+
+material NanoOmni/SeamCurvePatch08
+{
+  technique
+  {
+    pass
+    {
+      lighting on
+      ambient 1.0 1.0 1.0 1.0
+      diffuse 1.0 1.0 1.0 1.0
+      specular 0.05 0.05 0.05 1.0 8
+
+      texture_unit
+      {
+        texture seam_curve_patch_08.png
+        filtering trilinear
+      }
+    }
+  }
+}
+
+material NanoOmni/SeamCurvePatch09
+{
+  technique
+  {
+    pass
+    {
+      lighting on
+      ambient 1.0 1.0 1.0 1.0
+      diffuse 1.0 1.0 1.0 1.0
+      specular 0.05 0.05 0.05 1.0 8
+
+      texture_unit
+      {
+        texture seam_curve_patch_09.png
+        filtering trilinear
+      }
+    }
+  }
+}
+
+material NanoOmni/SeamCurvePatch10
+{
+  technique
+  {
+    pass
+    {
+      lighting on
+      ambient 1.0 1.0 1.0 1.0
+      diffuse 1.0 1.0 1.0 1.0
+      specular 0.05 0.05 0.05 1.0 8
+
+      texture_unit
+      {
+        texture seam_curve_patch_10.png
+        filtering trilinear
+      }
+    }
+  }
+}
+
+material NanoOmni/SeamCurvePatch11
+{
+  technique
+  {
+    pass
+    {
+      lighting on
+      ambient 1.0 1.0 1.0 1.0
+      diffuse 1.0 1.0 1.0 1.0
+      specular 0.05 0.05 0.05 1.0 8
+
+      texture_unit
+      {
+        texture seam_curve_patch_11.png
         filtering trilinear
       }
     }
