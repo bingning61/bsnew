@@ -1,0 +1,19 @@
+material NanoOmni/SeamVideoTexture
+{
+  technique
+  {
+    pass
+    {
+      lighting on
+      ambient 1.0 1.0 1.0 1.0
+      diffuse 1.0 1.0 1.0 1.0
+      specular 0.05 0.05 0.05 1.0 8
+
+      texture_unit
+      {
+        texture seam_video_frame_0558.png
+        filtering trilinear
+      }
+    }
+  }
+}

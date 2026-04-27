@@ -1,0 +1,135 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="seam_world_texture">
+    <gravity>0 0 -9.8</gravity>
+
+    <physics name="default_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <scene>
+      <ambient>0.62 0.62 0.60 1</ambient>
+      <background>0.72 0.72 0.72 1</background>
+      <shadows>true</shadows>
+    </scene>
+
+    <light name="main_light" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 8 0 0 0</pose>
+      <diffuse>0.86 0.86 0.82 1</diffuse>
+      <specular>0.16 0.16 0.16 1</specular>
+      <direction>-0.35 0.18 -0.92</direction>
+    </light>
+
+    <light name="camera_side_fill" type="point">
+      <cast_shadows>false</cast_shadows>
+      <pose>-2.0 0.0 3.0 0 0 0</pose>
+      <diffuse>0.36 0.36 0.34 1</diffuse>
+      <specular>0.04 0.04 0.04 1</specular>
+      <attenuation>
+        <range>7.0</range>
+        <constant>0.9</constant>
+        <linear>0.08</linear>
+        <quadratic>0.02</quadratic>
+      </attenuation>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="ground_link">
+        <collision name="ground_collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>20 20</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>100</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="ground_visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>20 20</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.73 0.72 0.68 1</ambient>
+            <diffuse>0.73 0.72 0.68 1</diffuse>
+            <specular>0.04 0.04 0.04 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="textured_weld_plate">
+      <static>true</static>
+      <pose>0.25 0 0.004 0 0 0</pose>
+      <link name="weld_texture_link">
+        <visual name="weld_texture_visual">
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <box>
+              <size>4.8 2.4 0.006</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://materials/scripts</uri>
+              <uri>file://materials/textures</uri>
+              <uri>package://nanoomni_description/materials/scripts</uri>
+              <uri>package://nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamVideoTexture</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Low-profile visual edges help keep the weld target visible if Gazebo lighting is dim. -->
+    <model name="weld_edge_emphasis">
+      <static>true</static>
+      <link name="edge_visual_link">
+        <visual name="edge_shadow_lower">
+          <pose>0.08 -0.08 0.009 0 0 0.065</pose>
+          <geometry>
+            <box>
+              <size>4.35 0.035 0.004</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.07 0.065 0.06 1</ambient>
+            <diffuse>0.07 0.065 0.06 1</diffuse>
+            <specular>0 0 0 1</specular>
+          </material>
+        </visual>
+        <visual name="edge_highlight_upper">
+          <pose>0.12 0.17 0.010 0 0 0.065</pose>
+          <geometry>
+            <box>
+              <size>4.10 0.028 0.004</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.55 0.52 0.47 1</ambient>
+            <diffuse>0.55 0.52 0.47 1</diffuse>
+            <specular>0.08 0.08 0.08 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>
