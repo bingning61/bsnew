@@ -60,14 +60,15 @@
 
     <model name="textured_weld_plate">
       <static>true</static>
-      <pose>0 0 0.003 0 0 0</pose>
+      <pose>0 0 0.004 0 0 0</pose>
       <link name="weld_texture_link">
         <visual name="weld_texture_visual">
           <cast_shadows>false</cast_shadows>
           <geometry>
-            <box>
-              <size>2.4 1.0 0.004</size>
-            </box>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>2.4 0.10</size>
+            </plane>
           </geometry>
           <material>
             <script>
