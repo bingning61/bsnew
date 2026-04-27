@@ -1,0 +1,316 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="seam_world_curve">
+    <gravity>0 0 -9.8</gravity>
+
+    <physics name="default_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <scene>
+      <ambient>0.58 0.58 0.58 1</ambient>
+      <background>0.72 0.72 0.72 1</background>
+      <shadows>true</shadows>
+    </scene>
+
+    <light name="main_light" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 8 0 0 0</pose>
+      <diffuse>0.88 0.88 0.84 1</diffuse>
+      <specular>0.18 0.18 0.18 1</specular>
+      <direction>-0.35 0.15 -0.92</direction>
+    </light>
+
+    <light name="soft_front_light" type="point">
+      <cast_shadows>false</cast_shadows>
+      <pose>-2.0 0.0 3.2 0 0 0</pose>
+      <diffuse>0.35 0.35 0.32 1</diffuse>
+      <specular>0.05 0.05 0.05 1</specular>
+      <attenuation>
+        <range>7.0</range>
+        <constant>0.8</constant>
+        <linear>0.08</linear>
+        <quadratic>0.02</quadratic>
+      </attenuation>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="ground_link">
+        <collision name="ground_collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>20 20</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>100</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="ground_visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>20 20</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.76 0.75 0.70 1</ambient>
+            <diffuse>0.76 0.75 0.70 1</diffuse>
+            <specular>0.04 0.04 0.04 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="curved_weld_seam">
+      <static>true</static>
+      <link name="seam_visual_link">
+        <!-- Wide grey zones approximate heat affected edges around the darker seam core. -->
+        <visual name="heat_zone_00">
+          <pose>-1.70 0.030 0.003 0 0 0.289</pose>
+          <geometry><box><size>0.34 0.23 0.004</size></box></geometry>
+          <material><ambient>0.22 0.22 0.20 1</ambient><diffuse>0.22 0.22 0.20 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_01">
+          <pose>-1.45 0.102 0.003 0 0 0.267</pose>
+          <geometry><box><size>0.34 0.25 0.004</size></box></geometry>
+          <material><ambient>0.24 0.24 0.21 1</ambient><diffuse>0.24 0.24 0.21 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_02">
+          <pose>-1.20 0.165 0.003 0 0 0.222</pose>
+          <geometry><box><size>0.34 0.24 0.004</size></box></geometry>
+          <material><ambient>0.21 0.21 0.19 1</ambient><diffuse>0.21 0.21 0.19 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_03">
+          <pose>-0.95 0.213 0.003 0 0 0.156</pose>
+          <geometry><box><size>0.34 0.27 0.004</size></box></geometry>
+          <material><ambient>0.25 0.24 0.22 1</ambient><diffuse>0.25 0.24 0.22 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_04">
+          <pose>-0.70 0.242 0.003 0 0 0.074</pose>
+          <geometry><box><size>0.34 0.26 0.004</size></box></geometry>
+          <material><ambient>0.22 0.22 0.20 1</ambient><diffuse>0.22 0.22 0.20 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_05">
+          <pose>-0.45 0.250 0.003 0 0 -0.015</pose>
+          <geometry><box><size>0.34 0.24 0.004</size></box></geometry>
+          <material><ambient>0.24 0.23 0.21 1</ambient><diffuse>0.24 0.23 0.21 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_06">
+          <pose>-0.20 0.235 0.003 0 0 -0.102</pose>
+          <geometry><box><size>0.34 0.28 0.004</size></box></geometry>
+          <material><ambient>0.20 0.20 0.18 1</ambient><diffuse>0.20 0.20 0.18 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_07">
+          <pose>0.05 0.199 0.003 0 0 -0.179</pose>
+          <geometry><box><size>0.34 0.25 0.004</size></box></geometry>
+          <material><ambient>0.24 0.24 0.22 1</ambient><diffuse>0.24 0.24 0.22 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_08">
+          <pose>0.30 0.146 0.003 0 0 -0.239</pose>
+          <geometry><box><size>0.34 0.23 0.004</size></box></geometry>
+          <material><ambient>0.21 0.21 0.19 1</ambient><diffuse>0.21 0.21 0.19 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_09">
+          <pose>0.55 0.079 0.003 0 0 -0.277</pose>
+          <geometry><box><size>0.34 0.26 0.004</size></box></geometry>
+          <material><ambient>0.25 0.24 0.21 1</ambient><diffuse>0.25 0.24 0.21 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_10">
+          <pose>0.80 0.005 0.003 0 0 -0.291</pose>
+          <geometry><box><size>0.34 0.27 0.004</size></box></geometry>
+          <material><ambient>0.22 0.21 0.19 1</ambient><diffuse>0.22 0.21 0.19 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_11">
+          <pose>1.05 -0.069 0.003 0 0 -0.281</pose>
+          <geometry><box><size>0.34 0.24 0.004</size></box></geometry>
+          <material><ambient>0.24 0.24 0.22 1</ambient><diffuse>0.24 0.24 0.22 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_12">
+          <pose>1.30 -0.137 0.003 0 0 -0.246</pose>
+          <geometry><box><size>0.34 0.25 0.004</size></box></geometry>
+          <material><ambient>0.21 0.21 0.19 1</ambient><diffuse>0.21 0.21 0.19 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_13">
+          <pose>1.55 -0.192 0.003 0 0 -0.189</pose>
+          <geometry><box><size>0.34 0.28 0.004</size></box></geometry>
+          <material><ambient>0.25 0.24 0.22 1</ambient><diffuse>0.25 0.24 0.22 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_14">
+          <pose>1.80 -0.231 0.003 0 0 -0.114</pose>
+          <geometry><box><size>0.34 0.26 0.004</size></box></geometry>
+          <material><ambient>0.22 0.22 0.20 1</ambient><diffuse>0.22 0.22 0.20 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_15">
+          <pose>2.05 -0.249 0.003 0 0 -0.028</pose>
+          <geometry><box><size>0.34 0.23 0.004</size></box></geometry>
+          <material><ambient>0.24 0.23 0.21 1</ambient><diffuse>0.24 0.23 0.21 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_16">
+          <pose>2.30 -0.245 0.003 0 0 0.062</pose>
+          <geometry><box><size>0.34 0.25 0.004</size></box></geometry>
+          <material><ambient>0.21 0.21 0.19 1</ambient><diffuse>0.21 0.21 0.19 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_17">
+          <pose>2.55 -0.218 0.003 0 0 0.145</pose>
+          <geometry><box><size>0.34 0.27 0.004</size></box></geometry>
+          <material><ambient>0.25 0.24 0.22 1</ambient><diffuse>0.25 0.24 0.22 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+        <visual name="heat_zone_18">
+          <pose>2.80 -0.173 0.003 0 0 0.213</pose>
+          <geometry><box><size>0.34 0.24 0.004</size></box></geometry>
+          <material><ambient>0.22 0.22 0.20 1</ambient><diffuse>0.22 0.22 0.20 1</diffuse><specular>0.02 0.02 0.02 1</specular></material>
+        </visual>
+
+        <!-- Dark overlapping cores create the actual weld groove with irregular width. -->
+        <visual name="seam_core_00">
+          <pose>-1.70 0.030 0.006 0 0 0.289</pose>
+          <geometry><box><size>0.30 0.09 0.005</size></box></geometry>
+          <material><ambient>0.015 0.015 0.014 1</ambient><diffuse>0.015 0.015 0.014 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_01">
+          <pose>-1.45 0.102 0.006 0 0 0.267</pose>
+          <geometry><box><size>0.31 0.11 0.005</size></box></geometry>
+          <material><ambient>0.020 0.019 0.017 1</ambient><diffuse>0.020 0.019 0.017 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_02">
+          <pose>-1.20 0.165 0.006 0 0 0.222</pose>
+          <geometry><box><size>0.29 0.10 0.005</size></box></geometry>
+          <material><ambient>0.012 0.012 0.011 1</ambient><diffuse>0.012 0.012 0.011 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_03">
+          <pose>-0.95 0.213 0.006 0 0 0.156</pose>
+          <geometry><box><size>0.32 0.13 0.005</size></box></geometry>
+          <material><ambient>0.020 0.018 0.016 1</ambient><diffuse>0.020 0.018 0.016 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_04">
+          <pose>-0.70 0.242 0.006 0 0 0.074</pose>
+          <geometry><box><size>0.30 0.12 0.005</size></box></geometry>
+          <material><ambient>0.014 0.014 0.013 1</ambient><diffuse>0.014 0.014 0.013 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_05">
+          <pose>-0.45 0.250 0.006 0 0 -0.015</pose>
+          <geometry><box><size>0.28 0.10 0.005</size></box></geometry>
+          <material><ambient>0.020 0.019 0.017 1</ambient><diffuse>0.020 0.019 0.017 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_06">
+          <pose>-0.20 0.235 0.006 0 0 -0.102</pose>
+          <geometry><box><size>0.32 0.14 0.005</size></box></geometry>
+          <material><ambient>0.012 0.012 0.011 1</ambient><diffuse>0.012 0.012 0.011 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_07">
+          <pose>0.05 0.199 0.006 0 0 -0.179</pose>
+          <geometry><box><size>0.30 0.11 0.005</size></box></geometry>
+          <material><ambient>0.018 0.017 0.016 1</ambient><diffuse>0.018 0.017 0.016 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_08">
+          <pose>0.30 0.146 0.006 0 0 -0.239</pose>
+          <geometry><box><size>0.29 0.09 0.005</size></box></geometry>
+          <material><ambient>0.014 0.014 0.013 1</ambient><diffuse>0.014 0.014 0.013 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_09">
+          <pose>0.55 0.079 0.006 0 0 -0.277</pose>
+          <geometry><box><size>0.31 0.12 0.005</size></box></geometry>
+          <material><ambient>0.020 0.018 0.016 1</ambient><diffuse>0.020 0.018 0.016 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_10">
+          <pose>0.80 0.005 0.006 0 0 -0.291</pose>
+          <geometry><box><size>0.32 0.13 0.005</size></box></geometry>
+          <material><ambient>0.012 0.012 0.011 1</ambient><diffuse>0.012 0.012 0.011 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_11">
+          <pose>1.05 -0.069 0.006 0 0 -0.281</pose>
+          <geometry><box><size>0.28 0.10 0.005</size></box></geometry>
+          <material><ambient>0.020 0.019 0.017 1</ambient><diffuse>0.020 0.019 0.017 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_12">
+          <pose>1.30 -0.137 0.006 0 0 -0.246</pose>
+          <geometry><box><size>0.30 0.11 0.005</size></box></geometry>
+          <material><ambient>0.014 0.014 0.013 1</ambient><diffuse>0.014 0.014 0.013 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_13">
+          <pose>1.55 -0.192 0.006 0 0 -0.189</pose>
+          <geometry><box><size>0.32 0.14 0.005</size></box></geometry>
+          <material><ambient>0.019 0.018 0.016 1</ambient><diffuse>0.019 0.018 0.016 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_14">
+          <pose>1.80 -0.231 0.006 0 0 -0.114</pose>
+          <geometry><box><size>0.30 0.12 0.005</size></box></geometry>
+          <material><ambient>0.012 0.012 0.011 1</ambient><diffuse>0.012 0.012 0.011 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_15">
+          <pose>2.05 -0.249 0.006 0 0 -0.028</pose>
+          <geometry><box><size>0.29 0.09 0.005</size></box></geometry>
+          <material><ambient>0.020 0.019 0.017 1</ambient><diffuse>0.020 0.019 0.017 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_16">
+          <pose>2.30 -0.245 0.006 0 0 0.062</pose>
+          <geometry><box><size>0.30 0.11 0.005</size></box></geometry>
+          <material><ambient>0.014 0.014 0.013 1</ambient><diffuse>0.014 0.014 0.013 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_17">
+          <pose>2.55 -0.218 0.006 0 0 0.145</pose>
+          <geometry><box><size>0.32 0.13 0.005</size></box></geometry>
+          <material><ambient>0.018 0.017 0.016 1</ambient><diffuse>0.018 0.017 0.016 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+        <visual name="seam_core_18">
+          <pose>2.80 -0.173 0.006 0 0 0.213</pose>
+          <geometry><box><size>0.29 0.10 0.005</size></box></geometry>
+          <material><ambient>0.012 0.012 0.011 1</ambient><diffuse>0.012 0.012 0.011 1</diffuse><specular>0 0 0 1</specular></material>
+        </visual>
+
+        <!-- Small brighter bead fragments break the perfectly uniform synthetic look. -->
+        <visual name="bead_highlight_00">
+          <pose>-1.56 0.068 0.009 0 0 0.289</pose>
+          <geometry><box><size>0.10 0.018 0.004</size></box></geometry>
+          <material><ambient>0.16 0.15 0.13 1</ambient><diffuse>0.16 0.15 0.13 1</diffuse><specular>0.04 0.04 0.04 1</specular></material>
+        </visual>
+        <visual name="bead_highlight_01">
+          <pose>-0.99 0.207 0.009 0 0 0.156</pose>
+          <geometry><box><size>0.12 0.018 0.004</size></box></geometry>
+          <material><ambient>0.18 0.16 0.14 1</ambient><diffuse>0.18 0.16 0.14 1</diffuse><specular>0.04 0.04 0.04 1</specular></material>
+        </visual>
+        <visual name="bead_highlight_02">
+          <pose>-0.30 0.243 0.009 0 0 -0.102</pose>
+          <geometry><box><size>0.09 0.016 0.004</size></box></geometry>
+          <material><ambient>0.15 0.14 0.12 1</ambient><diffuse>0.15 0.14 0.12 1</diffuse><specular>0.04 0.04 0.04 1</specular></material>
+        </visual>
+        <visual name="bead_highlight_03">
+          <pose>0.38 0.127 0.009 0 0 -0.239</pose>
+          <geometry><box><size>0.10 0.018 0.004</size></box></geometry>
+          <material><ambient>0.17 0.16 0.14 1</ambient><diffuse>0.17 0.16 0.14 1</diffuse><specular>0.04 0.04 0.04 1</specular></material>
+        </visual>
+        <visual name="bead_highlight_04">
+          <pose>0.91 -0.027 0.009 0 0 -0.291</pose>
+          <geometry><box><size>0.11 0.016 0.004</size></box></geometry>
+          <material><ambient>0.16 0.15 0.13 1</ambient><diffuse>0.16 0.15 0.13 1</diffuse><specular>0.04 0.04 0.04 1</specular></material>
+        </visual>
+        <visual name="bead_highlight_05">
+          <pose>1.48 -0.177 0.009 0 0 -0.189</pose>
+          <geometry><box><size>0.10 0.018 0.004</size></box></geometry>
+          <material><ambient>0.18 0.16 0.14 1</ambient><diffuse>0.18 0.16 0.14 1</diffuse><specular>0.04 0.04 0.04 1</specular></material>
+        </visual>
+        <visual name="bead_highlight_06">
+          <pose>2.14 -0.247 0.009 0 0 -0.028</pose>
+          <geometry><box><size>0.09 0.016 0.004</size></box></geometry>
+          <material><ambient>0.15 0.14 0.12 1</ambient><diffuse>0.15 0.14 0.12 1</diffuse><specular>0.04 0.04 0.04 1</specular></material>
+        </visual>
+        <visual name="bead_highlight_07">
+          <pose>2.62 -0.203 0.009 0 0 0.145</pose>
+          <geometry><box><size>0.12 0.018 0.004</size></box></geometry>
+          <material><ambient>0.17 0.16 0.14 1</ambient><diffuse>0.17 0.16 0.14 1</diffuse><specular>0.04 0.04 0.04 1</specular></material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>
