@@ -62,12 +62,12 @@
       <static>true</static>
       <link name="curve_visual_link">
         <visual name="weld_curve_segment_00">
-          <pose>-1.200 0.000 0.004 0 0 0.280</pose>
+          <pose>-2.500 0.000 0.004 0 0 0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -82,12 +82,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_01">
-          <pose>-1.100 0.029 0.004 0 0 0.277</pose>
+          <pose>-2.417 0.030 0.004 0 0 0.342</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -102,12 +102,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_02">
-          <pose>-1.000 0.057 0.004 0 0 0.267</pose>
+          <pose>-2.333 0.059 0.004 0 0 0.331</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -122,12 +122,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_03">
-          <pose>-0.900 0.083 0.004 0 0 0.250</pose>
+          <pose>-2.250 0.087 0.004 0 0 0.313</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -142,12 +142,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_04">
-          <pose>-0.800 0.107 0.004 0 0 0.227</pose>
+          <pose>-2.167 0.113 0.004 0 0 0.289</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -162,12 +162,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_05">
-          <pose>-0.700 0.129 0.004 0 0 0.198</pose>
+          <pose>-2.083 0.136 0.004 0 0 0.258</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -182,12 +182,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_06">
-          <pose>-0.600 0.147 0.004 0 0 0.164</pose>
+          <pose>-2.000 0.157 0.004 0 0 0.220</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -202,12 +202,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_07">
-          <pose>-0.500 0.162 0.004 0 0 0.125</pose>
+          <pose>-1.917 0.173 0.004 0 0 0.177</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -222,12 +222,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_08">
-          <pose>-0.400 0.172 0.004 0 0 0.082</pose>
+          <pose>-1.833 0.186 0.004 0 0 0.130</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -242,12 +242,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_09">
-          <pose>-0.300 0.178 0.004 0 0 0.038</pose>
+          <pose>-1.750 0.195 0.004 0 0 0.079</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -262,12 +262,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_10">
-          <pose>-0.200 0.180 0.004 0 0 -0.008</pose>
+          <pose>-1.667 0.199 0.004 0 0 0.025</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -282,12 +282,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_11">
-          <pose>-0.100 0.177 0.004 0 0 -0.054</pose>
+          <pose>-1.583 0.199 0.004 0 0 -0.028</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -302,12 +302,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_12">
-          <pose>0.000 0.169 0.004 0 0 -0.098</pose>
+          <pose>-1.500 0.195 0.004 0 0 -0.082</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -322,12 +322,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_13">
-          <pose>0.100 0.157 0.004 0 0 -0.139</pose>
+          <pose>-1.417 0.186 0.004 0 0 -0.132</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -342,12 +342,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_14">
-          <pose>0.200 0.141 0.004 0 0 -0.177</pose>
+          <pose>-1.333 0.173 0.004 0 0 -0.180</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -362,12 +362,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_15">
-          <pose>0.300 0.122 0.004 0 0 -0.209</pose>
+          <pose>-1.250 0.156 0.004 0 0 -0.222</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -382,12 +382,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_16">
-          <pose>0.400 0.099 0.004 0 0 -0.236</pose>
+          <pose>-1.167 0.135 0.004 0 0 -0.259</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -402,12 +402,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_17">
-          <pose>0.500 0.074 0.004 0 0 -0.257</pose>
+          <pose>-1.083 0.112 0.004 0 0 -0.290</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -422,12 +422,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_18">
-          <pose>0.600 0.047 0.004 0 0 -0.271</pose>
+          <pose>-1.000 0.085 0.004 0 0 -0.315</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -442,12 +442,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_19">
-          <pose>0.700 0.018 0.004 0 0 -0.279</pose>
+          <pose>-0.917 0.057 0.004 0 0 -0.332</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -462,12 +462,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_20">
-          <pose>0.800 -0.011 0.004 0 0 -0.280</pose>
+          <pose>-0.833 0.028 0.004 0 0 -0.342</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -482,12 +482,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_21">
-          <pose>0.900 -0.039 0.004 0 0 -0.274</pose>
+          <pose>-0.750 -0.002 0.004 0 0 -0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -502,12 +502,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_22">
-          <pose>1.000 -0.066 0.004 0 0 -0.261</pose>
+          <pose>-0.667 -0.032 0.004 0 0 -0.342</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -522,12 +522,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_23">
-          <pose>1.100 -0.092 0.004 0 0 -0.242</pose>
+          <pose>-0.583 -0.061 0.004 0 0 -0.330</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -542,12 +542,12 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_24">
-          <pose>1.200 -0.116 0.004 0 0 -0.217</pose>
+          <pose>-0.500 -0.089 0.004 0 0 -0.312</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.10</size>
+              <size>0.14 0.06</size>
             </plane>
           </geometry>
           <material>
@@ -555,6 +555,726 @@
               <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
               <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
               <name>NanoOmni/SeamCurvePatch03</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_25">
+          <pose>-0.417 -0.114 0.004 0 0 -0.287</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch04</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_26">
+          <pose>-0.333 -0.138 0.004 0 0 -0.256</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch05</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_27">
+          <pose>-0.250 -0.158 0.004 0 0 -0.218</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch06</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_28">
+          <pose>-0.167 -0.174 0.004 0 0 -0.175</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch07</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_29">
+          <pose>-0.083 -0.187 0.004 0 0 -0.127</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch08</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_30">
+          <pose>0.000 -0.196 0.004 0 0 -0.076</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch09</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_31">
+          <pose>0.083 -0.200 0.004 0 0 -0.022</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch10</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_32">
+          <pose>0.167 -0.199 0.004 0 0 0.031</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch11</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_33">
+          <pose>0.250 -0.194 0.004 0 0 0.085</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch01</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_34">
+          <pose>0.333 -0.185 0.004 0 0 0.135</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch02</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_35">
+          <pose>0.417 -0.172 0.004 0 0 0.182</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch03</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_36">
+          <pose>0.500 -0.155 0.004 0 0 0.225</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch04</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_37">
+          <pose>0.583 -0.134 0.004 0 0 0.261</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch05</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_38">
+          <pose>0.667 -0.110 0.004 0 0 0.292</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch06</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_39">
+          <pose>0.750 -0.084 0.004 0 0 0.316</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch07</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_40">
+          <pose>0.833 -0.056 0.004 0 0 0.333</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch08</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_41">
+          <pose>0.917 -0.027 0.004 0 0 0.343</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch09</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_42">
+          <pose>1.000 0.003 0.004 0 0 0.346</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch10</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_43">
+          <pose>1.083 0.033 0.004 0 0 0.341</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch11</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_44">
+          <pose>1.167 0.062 0.004 0 0 0.330</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch01</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_45">
+          <pose>1.250 0.090 0.004 0 0 0.311</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch02</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_46">
+          <pose>1.333 0.116 0.004 0 0 0.286</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch03</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_47">
+          <pose>1.417 0.139 0.004 0 0 0.254</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch04</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_48">
+          <pose>1.500 0.159 0.004 0 0 0.216</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch05</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_49">
+          <pose>1.583 0.175 0.004 0 0 0.172</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch06</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_50">
+          <pose>1.667 0.188 0.004 0 0 0.124</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch07</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_51">
+          <pose>1.750 0.196 0.004 0 0 0.073</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch08</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_52">
+          <pose>1.833 0.200 0.004 0 0 0.019</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch09</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_53">
+          <pose>1.917 0.199 0.004 0 0 -0.034</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch10</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_54">
+          <pose>2.000 0.194 0.004 0 0 -0.087</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch11</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_55">
+          <pose>2.083 0.185 0.004 0 0 -0.138</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch01</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_56">
+          <pose>2.167 0.171 0.004 0 0 -0.185</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch02</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_57">
+          <pose>2.250 0.153 0.004 0 0 -0.227</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch03</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_58">
+          <pose>2.333 0.133 0.004 0 0 -0.263</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch04</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_59">
+          <pose>2.417 0.109 0.004 0 0 -0.293</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch05</name>
+            </script>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+        <visual name="weld_curve_segment_60">
+          <pose>2.500 0.082 0.004 0 0 -0.317</pose>
+          <cast_shadows>false</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>0.14 0.06</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
+              <name>NanoOmni/SeamCurvePatch06</name>
             </script>
             <ambient>1 1 1 1</ambient>
             <diffuse>1 1 1 1</diffuse>
