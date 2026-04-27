@@ -1,0 +1,79 @@
+<launch>
+    <!-- Stage switches for incremental validation -->
+    <arg name="start_gazebo" default="true" />
+    <arg name="start_yolo" default="true" />
+    <arg name="start_controller" default="true" />
+
+    <!-- Gazebo world and robot spawn -->
+    <arg name="world_name" default="$(find nanoomni_description)/worlds/seam_world.world" />
+    <arg name="spawn_x" default="-1.5" />
+    <arg name="spawn_y" default="0.0" />
+    <arg name="spawn_z" default="0.05" />
+    <arg name="spawn_yaw" default="0.0" />
+    <arg name="gui" default="true" />
+    <arg name="paused" default="false" />
+    <arg name="use_sim_time" default="true" />
+
+    <!-- Vision and control topics -->
+    <arg name="image_topic" default="/image_raw" />
+    <arg name="center_topic" default="/seam_center" />
+    <arg name="result_topic" default="/result_image" />
+    <arg name="cmd_vel_topic" default="/cmd_vel" />
+
+    <!-- YOLOv5 detector parameters -->
+    <arg name="model_path" default="$(find robot_vision)/../../../models/seam_best.pt" />
+    <arg name="yolov5_repo_path" default="$(find robot_vision)/../../../yolov5" />
+    <arg name="device" default="cpu" />
+    <arg name="conf_threshold" default="0.25" />
+    <arg name="iou_threshold" default="0.45" />
+    <arg name="target_class_id" default="-1" />
+    <arg name="imgsz" default="640" />
+    <arg name="publish_result_image" default="true" />
+
+    <group if="$(arg start_gazebo)">
+        <param name="/use_sim_time" value="$(arg use_sim_time)" />
+
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <arg name="world_name" value="$(arg world_name)" />
+            <arg name="paused" value="$(arg paused)" />
+            <arg name="use_sim_time" value="$(arg use_sim_time)" />
+            <arg name="gui" value="$(arg gui)" />
+            <arg name="headless" value="false" />
+            <arg name="debug" value="false" />
+        </include>
+
+        <param name="robot_description"
+               command="$(find xacro)/xacro --inorder $(find nanoomni_description)/urdf/nanoomni_description.urdf.xacro" />
+
+        <node pkg="gazebo_ros" type="spawn_model" name="spawn_nanoomni"
+              args="-urdf -model nanoomni -x $(arg spawn_x) -y $(arg spawn_y) -z $(arg spawn_z) -Y $(arg spawn_yaw) -param robot_description"
+              output="screen" />
+
+        <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+    </group>
+
+    <group if="$(arg start_yolo)">
+        <node pkg="robot_vision" name="yolo_seam_detector" type="yolo_seam_detector.py" output="screen">
+            <param name="image_topic" value="$(arg image_topic)" />
+            <param name="center_topic" value="$(arg center_topic)" />
+            <param name="result_topic" value="$(arg result_topic)" />
+            <param name="model_path" value="$(arg model_path)" />
+            <param name="yolov5_repo_path" value="$(arg yolov5_repo_path)" />
+            <param name="device" value="$(arg device)" />
+            <param name="conf_threshold" value="$(arg conf_threshold)" />
+            <param name="iou_threshold" value="$(arg iou_threshold)" />
+            <param name="target_class_id" value="$(arg target_class_id)" />
+            <param name="imgsz" value="$(arg imgsz)" />
+            <param name="publish_result_image" value="$(arg publish_result_image)" />
+        </node>
+    </group>
+
+    <group if="$(arg start_controller)">
+        <node pkg="robot_vision" name="linefollow" type="line_detector.py" output="screen">
+            <param name="use_external_center" value="true" />
+            <param name="external_center_topic" value="$(arg center_topic)" />
+            <param name="external_center_timeout" value="0.5" />
+            <remap from="cmd_vel" to="$(arg cmd_vel_topic)" />
+        </node>
+    </group>
+</launch>
