@@ -84,10 +84,8 @@
           </geometry>
           <material>
             <script>
-              <uri>file://materials/scripts</uri>
-              <uri>file://materials/textures</uri>
-              <uri>package://nanoomni_description/materials/scripts</uri>
-              <uri>package://nanoomni_description/materials/textures</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/scripts/seam_video.material</uri>
+              <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
               <name>NanoOmni/SeamVideoTexture</name>
             </script>
             <ambient>1 1 1 1</ambient>
