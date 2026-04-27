@@ -23,19 +23,6 @@
       <direction>-0.35 0.18 -0.92</direction>
     </light>
 
-    <light name="camera_side_fill" type="point">
-      <cast_shadows>false</cast_shadows>
-      <pose>-2.0 0.0 3.0 0 0 0</pose>
-      <diffuse>0.36 0.36 0.34 1</diffuse>
-      <specular>0.04 0.04 0.04 1</specular>
-      <attenuation>
-        <range>7.0</range>
-        <constant>0.9</constant>
-        <linear>0.08</linear>
-        <quadratic>0.02</quadratic>
-      </attenuation>
-    </light>
-
     <model name="ground_plane">
       <static>true</static>
       <link name="ground_link">
@@ -73,13 +60,13 @@
 
     <model name="textured_weld_plate">
       <static>true</static>
-      <pose>0.25 0 0.004 0 0 0</pose>
+      <pose>0 0 0.003 0 0 0</pose>
       <link name="weld_texture_link">
         <visual name="weld_texture_visual">
           <cast_shadows>false</cast_shadows>
           <geometry>
             <box>
-              <size>4.8 2.4 0.006</size>
+              <size>2.4 1.0 0.004</size>
             </box>
           </geometry>
           <material>
@@ -91,39 +78,6 @@
             <ambient>1 1 1 1</ambient>
             <diffuse>1 1 1 1</diffuse>
             <specular>0.05 0.05 0.05 1</specular>
-          </material>
-        </visual>
-      </link>
-    </model>
-
-    <!-- Low-profile visual edges help keep the weld target visible if Gazebo lighting is dim. -->
-    <model name="weld_edge_emphasis">
-      <static>true</static>
-      <link name="edge_visual_link">
-        <visual name="edge_shadow_lower">
-          <pose>0.08 -0.08 0.009 0 0 0.065</pose>
-          <geometry>
-            <box>
-              <size>4.35 0.035 0.004</size>
-            </box>
-          </geometry>
-          <material>
-            <ambient>0.07 0.065 0.06 1</ambient>
-            <diffuse>0.07 0.065 0.06 1</diffuse>
-            <specular>0 0 0 1</specular>
-          </material>
-        </visual>
-        <visual name="edge_highlight_upper">
-          <pose>0.12 0.17 0.010 0 0 0.065</pose>
-          <geometry>
-            <box>
-              <size>4.10 0.028 0.004</size>
-            </box>
-          </geometry>
-          <material>
-            <ambient>0.55 0.52 0.47 1</ambient>
-            <diffuse>0.55 0.52 0.47 1</diffuse>
-            <specular>0.08 0.08 0.08 1</specular>
           </material>
         </visual>
       </link>

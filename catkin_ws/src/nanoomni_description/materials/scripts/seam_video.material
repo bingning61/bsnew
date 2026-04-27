@@ -11,7 +11,7 @@ material NanoOmni/SeamVideoTexture
 
       texture_unit
       {
-        texture seam_video_frame_0558.png
+        texture seam_video_crop.png
         filtering trilinear
       }
     }
