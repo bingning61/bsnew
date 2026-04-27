@@ -10,7 +10,10 @@ import re
 import shutil
 import subprocess
 import time
-from importlib import metadata
+try:
+    from importlib import metadata as importlib_metadata
+except ImportError:
+    import importlib_metadata
 from pathlib import Path
 from typing import Optional
 
@@ -68,7 +71,7 @@ def parse_requirements(file_path=ROOT.parent / "requirements.txt", package=""):
         ```
     """
     if package:
-        requires = [x for x in metadata.distribution(package).requires if "extra == " not in x]
+        requires = [x for x in importlib_metadata.distribution(package).requires if "extra == " not in x]
     else:
         requires = Path(file_path).read_text().splitlines()
 
@@ -216,8 +219,8 @@ def check_version(
     elif not current[0].isdigit():  # current is package name rather than version string, i.e. current='ultralytics'
         try:
             name = current  # assigned package name to 'name' arg
-            current = metadata.version(current)  # get version string from package name
-        except metadata.PackageNotFoundError as e:
+            current = importlib_metadata.version(current)  # get version string from package name
+        except importlib_metadata.PackageNotFoundError as e:
             if hard:
                 raise ModuleNotFoundError(emojis(f"WARNING ⚠️ {current} package is required but not installed")) from e
             else:
@@ -386,8 +389,8 @@ def check_requirements(requirements=ROOT.parent / "requirements.txt", exclude=()
         match = re.match(r"([a-zA-Z0-9-_]+)([<>!=~]+.*)?", r_stripped)
         name, required = match[1], match[2].strip() if match[2] else ""
         try:
-            assert check_version(metadata.version(name), required)  # exception if requirements not met
-        except (AssertionError, metadata.PackageNotFoundError):
+            assert check_version(importlib_metadata.version(name), required)  # exception if requirements not met
+        except (AssertionError, importlib_metadata.PackageNotFoundError):
             pkgs.append(r)
 
     @Retry(times=2, delay=1)
@@ -609,9 +612,9 @@ def collect_system_info():
 
     for r in parse_requirements(package="ultralytics"):
         try:
-            current = metadata.version(r.name)
+            current = importlib_metadata.version(r.name)
             is_met = "✅ " if check_version(current, str(r.specifier), hard=True) else "❌ "
-        except metadata.PackageNotFoundError:
+        except importlib_metadata.PackageNotFoundError:
             current = "(not installed)"
             is_met = "❌ "
         LOGGER.info(f"{r.name:<20}{is_met}{current}{r.specifier}")
