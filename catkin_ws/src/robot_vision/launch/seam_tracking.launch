@@ -8,6 +8,8 @@
     <arg name="camera_tf" default="false" />
     <arg name="camera_device" default="video0" />
     <arg name="fake_image_path" default="$(find robot_vision)/data/bingda.png" />
+    <arg name="video_path" default="" />
+    <arg name="fps" default="10" />
     <arg name="image_topic" default="/image_raw" />
     <arg name="cmd_vel_topic" default="cmd_vel" />
 
@@ -18,10 +20,12 @@
     <arg name="yolo_repo_path" default="$(find robot_vision)/../../../yolo" />
     <arg name="center_topic" default="/seam_center" />
     <arg name="result_topic" default="/result_image" />
-    <arg name="conf_threshold" default="0.25" />
+    <arg name="conf_thres" default="0.25" />
+    <arg name="conf_threshold" default="$(arg conf_thres)" />
     <arg name="iou_threshold" default="0.45" />
     <arg name="imgsz" default="640" />
-    <arg name="target_class_id" default="-1" />
+    <arg name="class_id" default="-1" />
+    <arg name="target_class_id" default="$(arg class_id)" />
     <arg name="device" default="cpu" />
     <arg name="publish_result_image" default="true" />
     <arg name="verbose" default="false" />
@@ -39,6 +43,8 @@
     <group if="$(arg use_fake_camera)">
         <node pkg="robot_vision" name="fake_camera" type="fake_camera.py" output="screen">
             <param name="image_path" value="$(arg fake_image_path)" />
+            <param name="video_path" value="$(arg video_path)" />
+            <param name="fps" value="$(arg fps)" />
         </node>
     </group>
 

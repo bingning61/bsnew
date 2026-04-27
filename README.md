@@ -121,6 +121,26 @@ roslaunch robot_vision seam_tracking.launch \
 
 The launch file has the same default `model_path` and `yolov5_repo_path`, so the explicit arguments above are mainly for clarity.
 
+## Run Continuous Video Test
+
+After a single-image test works, use `video_path` to make `fake_camera.py` loop over a video file and publish frames to `/image_raw`.
+
+```bash
+cd ~/bsnew/catkin_ws
+source /opt/ros/melodic/setup.bash
+source devel/setup.bash
+
+roslaunch robot_vision seam_tracking.launch \
+  use_fake_camera:=true \
+  run_base_control:=false \
+  device:=cpu \
+  conf_thres:=0.1 \
+  class_id:=-1 \
+  video_path:=$HOME/bsnew/原视频.mp4
+```
+
+When `video_path` is empty, fake-camera mode still publishes the single image from `fake_image_path`. The default video/image publish rate is `fps:=10`; override it if needed.
+
 ## Run With Real Camera, Still Without Chassis
 
 ```bash
