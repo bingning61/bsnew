@@ -217,3 +217,23 @@ material NanoOmni/SeamCurvePatch11
     }
   }
 }
+
+material NanoOmni/CleanBackgroundSurface
+{
+  technique
+  {
+    pass
+    {
+      lighting on
+      ambient 0.82 0.82 0.82 1.0
+      diffuse 0.82 0.82 0.82 1.0
+      specular 0.02 0.02 0.02 1.0 4
+
+      texture_unit
+      {
+        texture bg_surface_clean.png
+        filtering trilinear
+      }
+    }
+  }
+}
