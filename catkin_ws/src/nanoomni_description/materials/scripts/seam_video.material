@@ -225,13 +225,13 @@ material NanoOmni/CleanBackgroundSurface
     pass
     {
       lighting on
-      ambient 0.82 0.82 0.82 1.0
-      diffuse 0.82 0.82 0.82 1.0
-      specular 0.02 0.02 0.02 1.0 4
+      ambient 0.76 0.76 0.76 1.0
+      diffuse 0.76 0.76 0.76 1.0
+      specular 0.015 0.015 0.015 1.0 4
 
       texture_unit
       {
-        texture bg_surface_clean.png
+        texture bg_surface_detail.png
         filtering trilinear
       }
     }

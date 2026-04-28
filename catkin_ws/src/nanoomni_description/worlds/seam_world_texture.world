@@ -76,9 +76,9 @@
               <uri>file:///home/bn/bsnew/catkin_ws/src/nanoomni_description/materials/textures</uri>
               <name>NanoOmni/CleanBackgroundSurface</name>
             </script>
-            <ambient>0.82 0.82 0.82 1</ambient>
-            <diffuse>0.82 0.82 0.82 1</diffuse>
-            <specular>0.02 0.02 0.02 1</specular>
+            <ambient>0.76 0.76 0.76 1</ambient>
+            <diffuse>0.76 0.76 0.76 1</diffuse>
+            <specular>0.015 0.015 0.015 1</specular>
           </material>
         </visual>
       </link>
