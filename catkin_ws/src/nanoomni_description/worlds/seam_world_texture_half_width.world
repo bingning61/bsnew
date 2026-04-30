@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
-  <world name="seam_world_texture">
+  <world name="seam_world_texture_half_width">
     <gravity>0 0 -9.8</gravity>
 
     <physics name="default_physics" type="ode">
@@ -93,7 +93,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -113,7 +113,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -133,7 +133,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -153,7 +153,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -173,7 +173,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -193,7 +193,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -213,7 +213,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -233,7 +233,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -253,7 +253,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -273,7 +273,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -293,7 +293,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -313,7 +313,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -333,7 +333,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -353,7 +353,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -373,7 +373,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -393,7 +393,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -413,7 +413,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -433,7 +433,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -453,7 +453,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -473,7 +473,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -493,7 +493,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -513,7 +513,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -533,7 +533,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -553,7 +553,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -573,7 +573,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -593,7 +593,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -613,7 +613,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -633,7 +633,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -653,7 +653,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -673,7 +673,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -693,7 +693,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -713,7 +713,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -733,7 +733,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -753,7 +753,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -773,7 +773,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -793,7 +793,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -813,7 +813,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -833,7 +833,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -853,7 +853,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -873,7 +873,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -893,7 +893,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -913,7 +913,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -933,7 +933,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -953,7 +953,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -973,7 +973,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -993,7 +993,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1013,7 +1013,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1033,7 +1033,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1053,7 +1053,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1073,7 +1073,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1093,7 +1093,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1113,7 +1113,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1133,7 +1133,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1153,7 +1153,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1173,7 +1173,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1193,7 +1193,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1213,7 +1213,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1233,7 +1233,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1253,7 +1253,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1273,7 +1273,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
@@ -1293,7 +1293,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>0.14 0.06</size>
+              <size>0.14 0.03</size>
             </plane>
           </geometry>
           <material>
