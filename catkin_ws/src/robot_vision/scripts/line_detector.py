@@ -51,6 +51,14 @@ class line_follow:
         self.center_point = 0
         self.last_external_center_time = rospy.Time(0)
 
+        # PI controller state variables (incremental addition to original P controller)
+        self.i_error = 0.0
+        self.last_error = 0.0
+        self.last_time = rospy.Time(0)
+        self.i_max = 0.3
+        self.Kp = 0.5
+        self.Ki = 0.02
+
         if self.use_external_center:
             self.center_sub = rospy.Subscriber(self.external_center_topic, Point, self.external_center_callback, queue_size=1)
             self.center_watchdog = rospy.Timer(rospy.Duration(0.1), self.external_center_watchdog)
@@ -88,6 +96,7 @@ class line_follow:
             self.twist_calculate(image_width / 2.0, center_x)
         else:
             self.publish_stop()
+            self.i_error = 0.0
 
     def external_center_watchdog(self, _event):
         if not self.use_external_center:
@@ -151,8 +160,10 @@ class line_follow:
             
         except CvBridgeError as e:
             print e
-    def twist_calculate(self,width,center):
-        center = float(center)
+    def twist_calculate(self, ref_center, target_center):
+        # ref_center = image_width/2.0 (image center x-coordinate)
+        # target_center = center_x (detection box center)
+        target_center = float(target_center)
         self.twist = Twist()
         self.twist.linear.x = 0
         self.twist.linear.y = 0
@@ -160,14 +171,32 @@ class line_follow:
         self.twist.angular.x = 0
         self.twist.angular.y = 0
         self.twist.angular.z = 0
-        if center/width > 0.95 and center/width < 1.05:
+        # normalized error: positive when target to the left of image center
+        e = (ref_center - target_center) / ref_center
+        now = rospy.Time.now()
+        dt = (now - self.last_time).to_sec()
+        if dt <= 0.0 or dt > 1.0:
+            dt = 0.1
+        if abs(e) < 0.05:
+            # dead zone: target approximately centered, move straight
             self.twist.linear.x = 0.2
         else:
-            self.twist.angular.z = ((width - center) / width) / 2.0
+            # P (proportional) term
+            angular = self.Kp * e
+            # I (integral) term with conditional integration (anti-windup)
+            if abs(e) < 0.30:
+                self.i_error += e * dt
+            self.i_error = max(-self.i_max, min(self.i_max, self.i_error))
+            angular += self.Ki * self.i_error
+            self.twist.angular.z = angular
+            # linear speed: reduce on large turns (symmetric, fixed abs())
             if abs(self.twist.angular.z) < 0.2:
-                self.twist.linear.x = 0.2 - self.twist.angular.z/2.0
+                self.twist.linear.x = 0.2 - abs(self.twist.angular.z) / 2.0
             else:
                 self.twist.linear.x = 0.1
+        # update PI state for next cycle
+        self.last_error = e
+        self.last_time = now
         self.pub_cmd.publish(self.twist)
 
 
