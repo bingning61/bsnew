@@ -1,4 +1,4 @@
-# Project instructions for Codex
+# Project instructions for AI assistants
 
 ## Project objective
 This repository contains two existing systems that must be merged into one complete runnable undergraduate graduation project:
@@ -8,6 +8,23 @@ This repository contains two existing systems that must be merged into one compl
 
 The final target is:
 A seam-tracking robot car system based on YOLO seam detection and the existing center-deviation control pipeline.
+
+## Mandatory context loading for any AI assistant
+These instructions apply to any AI assistant working in this repository, not only Codex.
+
+For any project-specific request in this repository, the assistant must first read and follow this file:
+
+- `AGENTS.md`
+
+Then the assistant must read the current handoff file before answering, planning, or editing:
+
+- `current_thesis_code_handoff/code_based_thesis_handoff.md`
+
+Use the handoff file as the current code-based project facts, thesis context, tested paths, known weights, simulation worlds, and run-command reference. If the handoff file conflicts with the user's newest message, follow the user's newest message, but never violate the fixed runtime constraints in this file.
+
+If the handoff file is missing, explicitly say that it is missing and continue from the repository files instead of inventing facts.
+
+Do not rely on old project memory. Always use the current repository files as the source of truth.
 
 ## Actual repository layout
 Repository root: bsnew/
@@ -25,14 +42,55 @@ This is a ROS1 project.
 The final runtime environment is Ubuntu 18.04 in a virtual machine.
 You must work according to ROS1/catkin conventions.
 
+Fixed target stack:
+- Ubuntu 18.04
+- ROS1 Melodic
+- catkin
+- Gazebo 9
+- Python 3.6 compatibility as the primary target
+- OpenCV / cv_bridge versions compatible with ROS1 Melodic
+- xacro, robot_state_publisher, joint_state_publisher, rviz, and gazebo_ros compatible with ROS1 Melodic
+- local YOLOv5 repository under `bsnew/yolov5/`
+
 Strict requirements:
 - do NOT convert anything to ROS2
 - do NOT introduce ROS2 APIs
 - do NOT introduce ament
 - do NOT introduce colcon
 - do NOT rewrite launch/config/build structure into ROS2 style
+- do NOT require Ubuntu 20.04, 22.04, 24.04, ROS Noetic, Foxy, Humble, Jazzy, or newer ROS/Gazebo stacks
+- do NOT require Python 3.8+ features or dependencies that break Python 3.6 compatibility
+- do NOT depend on Gazebo Fuel, online model downloads, or network-only resources
+- do NOT introduce dynamic video-texture plugins or other high-risk Gazebo extensions unless the user explicitly authorizes them
 
 Treat this repository as a ROS1/catkin project.
+
+## Current simulation and weight reference
+The main Gazebo seam-tracking launch entry is:
+
+- `catkin_ws/src/robot_vision/launch/gazebo_seam_tracking.launch`
+
+The main simulation support package is:
+
+- `catkin_ws/src/nanoomni_description/`
+
+Current important worlds include:
+
+- `catkin_ws/src/nanoomni_description/worlds/seam_world_texture.world`
+- `catkin_ws/src/nanoomni_description/worlds/seam_world_texture_half_width.world`
+
+Current important YOLO weight files include:
+
+- `models/seam_best.pt`
+- `models/best_curve10s_img416.pt`
+- `models/best_curve_bg_merged.pt`
+- `models/best_curve_bg_thin_finetune.pt`
+
+For half-width / thin-seam Gazebo tests, prefer passing the thin-seam weight by launch argument instead of changing launch defaults:
+
+- `model_path:=/home/bn/bsnew/models/best_curve_bg_thin_finetune.pt`
+
+Do not change the default weight path in launch files unless the user explicitly asks for that change.
 
 ## Repository inspection requirement
 Before making edits, first locate the relevant ROS1 package(s) under bsnew/catkin_ws/src/.
