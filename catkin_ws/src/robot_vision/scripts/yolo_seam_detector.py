@@ -161,48 +161,14 @@ class YoloSeamDetector(object):
 
     def draw_bbox_center_marker(self, image, center_x, center_y):
         center = (int(round(center_x)), int(round(center_y)))
-        marker_radius = 3
-        cross_half_len = 8
+        marker_radius = 4
 
-        cv2.circle(image, center, marker_radius + 2, (255, 255, 255), -1, lineType=cv2.LINE_AA)
         cv2.circle(image, center, marker_radius, (0, 0, 255), -1, lineType=cv2.LINE_AA)
-        cv2.line(
-            image,
-            (center[0] - cross_half_len, center[1]),
-            (center[0] + cross_half_len, center[1]),
-            (255, 255, 255),
-            3,
-            lineType=cv2.LINE_AA,
-        )
-        cv2.line(
-            image,
-            (center[0], center[1] - cross_half_len),
-            (center[0], center[1] + cross_half_len),
-            (255, 255, 255),
-            3,
-            lineType=cv2.LINE_AA,
-        )
-        cv2.line(
-            image,
-            (center[0] - cross_half_len, center[1]),
-            (center[0] + cross_half_len, center[1]),
-            (0, 0, 255),
-            1,
-            lineType=cv2.LINE_AA,
-        )
-        cv2.line(
-            image,
-            (center[0], center[1] - cross_half_len),
-            (center[0], center[1] + cross_half_len),
-            (0, 0, 255),
-            1,
-            lineType=cv2.LINE_AA,
-        )
 
         label = "bbox center (%.0f, %.0f)" % (center_x, center_y)
-        font_scale = 0.32
+        font_scale = 0.45
         text_thickness = 1
-        outline_thickness = 2
+        outline_thickness = 3
         (text_width, text_height), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_scale, text_thickness)
         text_x = max(5, min(center[0] + 8, image.shape[1] - text_width - 5))
         text_y = max(20, min(center[1] - 12, image.shape[0] - 8))
@@ -384,9 +350,9 @@ class YoloSeamDetector(object):
                 "cls:%d conf:%.2f" % (best_cls, best_conf),
                 (int(x1), max(int(y1) - 10, 20)),
                 cv2.FONT_HERSHEY_SIMPLEX,
-                0.32,
+                0.6,
                 (255, 255, 255),
-                2,
+                4,
                 lineType=cv2.LINE_AA,
             )
             cv2.putText(
@@ -394,9 +360,9 @@ class YoloSeamDetector(object):
                 "cls:%d conf:%.2f" % (best_cls, best_conf),
                 (int(x1), max(int(y1) - 10, 20)),
                 cv2.FONT_HERSHEY_SIMPLEX,
-                0.32,
+                0.6,
                 (0, 255, 0),
-                1,
+                2,
                 lineType=cv2.LINE_AA,
             )
         else:
