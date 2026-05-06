@@ -103,9 +103,11 @@ class line_follow:
             return
         if self.last_external_center_time.to_sec() == 0:
             self.publish_stop()
+            self.i_error = 0.0
             return
         if (rospy.Time.now() - self.last_external_center_time).to_sec() > self.external_center_timeout:
             self.publish_stop()
+            self.i_error = 0.0
 
     def callback(self,data):
         # convert ROS topic to CV image formart
