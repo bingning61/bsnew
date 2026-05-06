@@ -49,7 +49,7 @@ It does not start the old HSV visual front-end.
 | --- | --- | --- |
 | `/image_raw` | `sensor_msgs/Image` | Camera or fake-camera image input |
 | `/seam_center` | `geometry_msgs/Point` | YOLOv5 detection result adapted for the original controller |
-| `/result_image` | `sensor_msgs/Image` | Debug image with bbox, target center, and image center line |
+| `/result_image` | `sensor_msgs/Image` | Debug image with bbox, red/white bbox-center marker, and blue image-center line |
 | `/cmd_vel` | `geometry_msgs/Twist` | Control output for chassis or simulation |
 
 `/seam_center` fields:
@@ -71,6 +71,10 @@ The original controller uses:
 ```text
 reference_x = image_width / 2
 ```
+
+In `/result_image`, the green rectangle is the selected YOLO detection box,
+the red/white cross marks the detection-box center used for `/seam_center.x`,
+and the blue vertical line marks `reference_x`.
 
 ## Build On Ubuntu 18.04 + ROS Melodic
 

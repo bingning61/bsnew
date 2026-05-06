@@ -10,7 +10,9 @@
 
 ## 2. 项目总体定位
 
-当前代码项目实际实现的是一个 ROS1/catkin 环境下的焊缝跟踪机器人软件链路：系统以相机或测试视频/图片发布的图像作为输入，通过 YOLOv5 推理得到焊缝目标检测框，提取检测框横向中心与图像宽度，并将其发布为控制器可消费的中心位置消息；随后控制逻辑以图像中心为参考，根据目标中心偏差生成 `geometry_msgs/Twist` 速度指令，最终可由底盘串口桥或 Gazebo 平面运动插件执行。依据：`README.md:5-16`、`README.md:46-73`、`catkin_ws/src/robot_vision/launch/seam_tracking.launch:42-83`、`catkin_ws/src/robot_vision/scripts/yolo_seam_detector.py:284-325`、`catkin_ws/src/robot_vision/scripts/line_detector.py:82-99`、`catkin_ws/src/robot_vision/scripts/line_detector.py:154-171`。
+当前代码项目实际实现的是一个 ROS1/catkin 环境下的焊缝跟踪机器人软件链路：系统以相机或测试视频/图片发布的图像作为输入，通过 YOLOv5 推理得到焊缝目标检测框，提取检测框横向中心与图像宽度，并将其发布为控制器可消费的中心位置消息；随后控制逻辑以图像中心为参考，根据目标中心偏差生成 `geometry_msgs/Twist` 速度指令，最终可由底盘串口桥或 Gazebo 平面运动插件执行。依据：`README.md:5-16`、`README.md:46-73`、`catkin_ws/src/robot_vision/launch/seam_tracking.launch:42-83`、`catkin_ws/src/robot_vision/scripts/yolo_seam_detector.py:284-325`、`catkin_ws/src/robot_vision/scripts/line_detector.py:82-99`、`catkin_ws/src/robot_vision/scripts/line_detector.py:165-202`。
+
+用户已确认实体机器人为麦克纳姆轮全向移动底盘。代码层面可确认底盘桥 `base_control.py` 支持 `Twist.linear.x`、`Twist.linear.y` 和 `Twist.angular.z` 三轴速度接口，并且底盘协议文档明确包含 X 轴速度、Y 轴速度和 Z 轴角速度字段，其中 Y 轴线速度用于适应全向移动底盘需求。当前焊缝跟踪上层控制器仍采用前向速度加偏航角速度的基础跟踪方式，即输出 `linear.x` 和 `angular.z`，并将 `linear.y` 保持为 0；因此论文可以写“麦克纳姆轮全向底盘速度接口”，但不能写成上层焊缝跟踪代码已经实现四轮麦克纳姆逆运动学或已经利用横向平移进行焊缝纠偏。依据：用户 2026-05-06 确认、`catkin_ws/src/base_control/script/base_control.py:217-246`、`catkin_ws/src/base_control/README.md:43-48`、`catkin_ws/src/base_control/README.md:96-103`、`catkin_ws/src/robot_vision/scripts/line_detector.py:169-202`。
 
 代码中明确出现“seam tracking”“seam detector”“焊缝检测/跟踪”相关命名和说明，因此可以将论文任务定位为焊缝目标跟踪。代码没有明确说明具体工业生产场景、焊接工艺、焊缝材料、工件类型或实际部署工位，这些内容不能直接写成已完成事实。依据：`README.md:1-3`、`catkin_ws/src/robot_vision/launch/seam_tracking.launch:16-31`、`catkin_ws/src/nanoomni_description/worlds/seam_world_curve.world:74-178`。
 
@@ -152,7 +154,7 @@ ROS1 中通过话题传递 `sensor_msgs/Image` 图像消息。主 launch 根据 
 
 #### 代码依据
 
-`catkin_ws/src/robot_vision/scripts/line_detector.py:39-60`；`catkin_ws/src/robot_vision/scripts/line_detector.py:82-90`；`catkin_ws/src/robot_vision/scripts/line_detector.py:154-171`。
+`catkin_ws/src/robot_vision/scripts/line_detector.py:39-60`；`catkin_ws/src/robot_vision/scripts/line_detector.py:90-110`；`catkin_ws/src/robot_vision/scripts/line_detector.py:165-202`。
 
 #### 方法作用
 
@@ -160,19 +162,19 @@ ROS1 中通过话题传递 `sensor_msgs/Image` 图像消息。主 launch 根据 
 
 #### 基本原理
 
-控制参考为图像横向中心 `image_width / 2.0`，目标位置为检测框中心 `center_x`。代码中 `twist_calculate(width, center)` 的第一个参数在外部模式下传入 `image_width / 2.0`，第二个参数传入 `center_x`。当 `center / width` 处于 0.95 到 1.05 之间时，认为目标接近中心，给定前进速度；否则根据 `(width - center) / width` 计算角速度，并根据角速度大小分段设置线速度。
+控制参考为图像横向中心 `image_width / 2.0`，目标位置为检测框中心 `center_x`。代码中 `twist_calculate(ref_center, target_center)` 的第一个参数在外部模式下传入 `image_width / 2.0`，第二个参数传入 `center_x`。控制器内部使用归一化误差 `e = (ref_center - target_center) / ref_center`。当 `abs(e) < 0.05` 时，认为目标接近中心，给定前进速度；否则通过小增益 PI 形式计算角速度，其中 `Kp=0.5`、`Ki=0.02`，并带有 `abs(e)<0.30` 的条件积分、`i_max=0.3` 的积分限幅和异常时间间隔保护。
 
 #### 实现逻辑
 
-外部中心点回调读取 `Point.y` 作为图像宽度，读取 `Point.x` 作为目标中心。当 `Point.z > 0.5` 且宽度有效时，更新最后有效时间并调用 `twist_calculate(image_width / 2.0, center_x)`。控制函数初始化全零 `Twist`，在中心误差较小时设置 `linear.x=0.2`；在偏差存在时设置 `angular.z=((width-center)/width)/2.0`，并将 `linear.x` 设置为 `0.2-angular.z/2.0` 或 `0.1`。
+外部中心点回调读取 `Point.y` 作为图像宽度，读取 `Point.x` 作为目标中心。当 `Point.z > 0.5` 且宽度有效时，更新最后有效时间并调用 `twist_calculate(image_width / 2.0, center_x)`。控制函数初始化全零 `Twist`，明确将 `linear.y` 置为 0；在中心误差较小时设置 `linear.x=0.2`、`angular.z=0`；在偏差存在时设置 `angular.z=Kp*e+Ki*i_error`，并按 `abs(angular.z)<0.2` 分段将 `linear.x` 设置为 `0.2-abs(angular.z)/2.0` 或 `0.1`。检测无效、初始未收到有效中心或中心点超时时，代码发布零速度并清零积分状态。
 
 #### 可用于论文的表述
 
-运动控制部分采用基于图像中心偏差的速度调节策略。系统以图像中心作为期望位置，以检测框中心作为当前目标位置，通过二者的横向差异构造转向控制量。当目标接近期望中心时，机器人保持较高线速度直行；当目标偏离中心时，系统根据偏差方向生成角速度，并在偏差较大时降低线速度，从而兼顾跟踪修正与运动稳定性。
+运动控制部分采用基于图像中心偏差的速度调节策略。系统以图像中心作为期望位置，以检测框中心作为当前目标位置，通过二者的横向差异构造控制误差。当目标接近期望中心时，机器人保持前向速度直行；当目标偏离中心时，系统通过小增益 PI 控制生成偏航角速度，并在角速度较大时降低前向速度，从而兼顾跟踪修正与运动稳定性。实体平台为麦克纳姆轮全向底盘，但当前焊缝跟踪控制输出为 `u=[v_x, 0, omega_z]`，没有启用横向速度 `v_y` 参与纠偏。
 
 #### 不能写或待确认内容
 
-不能将该控制律写成 PID、MPC、纯跟踪、卡尔曼滤波控制或闭环里程计反馈控制。主焊缝跟踪控制代码没有读取 `odom` 反馈；它只消费中心点消息并输出 `cmd_vel`。这是基于代码调用关系的结论。
+不能将该控制律写成完整 PID、MPC、纯跟踪、卡尔曼滤波控制、闭环里程计反馈控制或基于横向平移的全向跟踪控制。主焊缝跟踪控制代码没有读取 `odom` 反馈；它只消费中心点消息并输出 `cmd_vel`。当前上层代码没有实现四轮麦克纳姆逆运动学，轮速分配应表述为底盘固件或下位机侧完成，除非用户另行提供固件或实测材料。这是基于代码调用关系的结论。
 
 ### 5.5 目标丢失与输入超时安全停止方法
 
@@ -238,7 +240,7 @@ ROS1 中通过话题传递 `sensor_msgs/Image` 图像消息。主 launch 根据 
 
 #### 基本原理
 
-底盘桥订阅 `geometry_msgs/Twist`，读取线速度和角速度，将其按 1000 倍缩放为整数并填入协议帧。协议帧以 `0x5a` 为帧头，包含帧长度、ID、功能码、速度数据、预留位和 CRC-8 校验。
+底盘桥订阅 `geometry_msgs/Twist`，读取 `linear.x`、`linear.y` 和 `angular.z` 三个速度分量，将其按 1000 倍缩放为整数并填入协议帧。协议帧以 `0x5a` 为帧头，包含帧长度、ID、功能码、速度数据、预留位和 CRC-8 校验。协议功能码 `0x01` 发送 X 轴速度、Y 轴速度和 Z 轴角速度；功能码 `0x11/0x12` 的说明中明确提到增加 Y 轴线速度是为了适应全向移动底盘需求。
 
 #### 实现逻辑
 
@@ -246,11 +248,11 @@ ROS1 中通过话题传递 `sensor_msgs/Image` 图像消息。主 launch 根据 
 
 #### 可用于论文的表述
 
-执行层采用 ROS 速度话题到串口协议的桥接方式。上层控制节点只需发布标准 `cmd_vel`，底盘接口节点负责将速度分量编码为下位机通信帧并发送到底盘控制板，从而实现感知控制算法与底层硬件协议的分离。
+执行层采用 ROS 速度话题到串口协议的桥接方式。上层控制节点只需发布标准 `cmd_vel`，底盘接口节点负责将三轴速度分量编码为下位机通信帧并发送到底盘控制板，从而实现感知控制算法与底层硬件协议的分离。论文中可说明实体底盘为麦克纳姆轮全向移动平台，底盘接口支持 X/Y/Z 三自由度速度命令；但当前焊缝跟踪控制只使用 X 轴前向速度和 Z 轴角速度，Y 轴横向速度通道保留但未用于纠偏。
 
 #### 不能写或待确认内容
 
-不能写成底盘硬件已经在本次环境中验证运行；当前环境没有执行实车测试。下位机 1000 ms 无指令主动停机来自 README 协议说明，属于文档提及，代码中无法确认下位机固件行为。
+不能写成底盘硬件已经在本次环境中验证运行；当前环境没有执行实车测试。下位机 1000 ms 无指令主动停机来自 README 协议说明，属于文档提及，代码中无法确认下位机固件行为。不能写上层 ROS 代码已经完成麦克纳姆四轮轮速逆解、横向平移纠偏或全向轨迹跟踪；当前可确认的是三轴速度接口存在，具体轮速分配在底盘控制板或下位机侧。
 
 ### 5.8 Gazebo 与机器人模型仿真支撑方法
 
@@ -527,13 +529,13 @@ rqt_graph
 
 1. 不能写项目已经完成 YOLO 训练并获得具体 mAP、Precision、Recall、FPS 或损失数值；仓库没有对应结果文件。
 2. 不能写 `models/seam_best.pt` 的训练数据集、类别名称、训练轮次、网络规模或模型结构；当前环境未能读取权重元数据，仓库也没有对应说明。
-3. 不能写当前系统采用 PID、MPC、卡尔曼滤波、轨迹规划、SLAM、AMCL 或 `move_base` 完成焊缝跟踪；主链路控制只使用中心偏差和 `cmd_vel`。
+3. 不能写当前系统采用完整 PID、MPC、卡尔曼滤波、轨迹规划、SLAM、AMCL 或 `move_base` 完成焊缝跟踪；主链路控制只使用中心偏差、小增益 PI 角速度调节和 `cmd_vel`。
 4. 不能写系统实现了焊缝语义分割、中心线拟合、骨架提取、三维重建或焊缝宽度测量；代码只使用检测框中心。
 5. 不能写雷达、IMU、里程计参与焊缝跟踪闭环控制；这些功能在仓库中存在，但主 seam-tracking 控制逻辑没有消费它们。
 6. 不能写 `nanoomni_description` 是主控制包；它是描述和仿真支撑包。
 7. 不能写 `yolo/` 旧 Ultralytics 目录是当前主运行入口；README 明确当前主视觉前端是 YOLOv5，旧目录为历史实验材料。
 8. 不能把 `yolo/DrawLoss.py` 中的 `YOLOv11`、`Gold-YOLO`、`YOLOv10`、`YOLOv8`、`EMSD-YOLO` 标签写成当前项目已验证对比实验。
-9. 不能写实际底盘型号、相机型号、安装位置、工位环境、焊缝材料或真实部署平台；仓库没有明确事实。
+9. 用户已确认实体机器人为麦克纳姆轮全向移动底盘，但不能写未提供证据的具体商品型号、相机型号、安装位置、工位环境、焊缝材料或真实部署平台。
 10. 不能写已经完成实机安全停止测试、实机闭环跟踪测试或 Gazebo 定量仿真实验；仓库只提供运行入口和支撑文件。
 11. 不能把参考视频 `原视频.mp4`、`识别视频.mp4` 的来源、用途或指标写成已确认事实；仓库只证明文件存在。
 12. 不能直接引用旧 `thesis_handoff/` 的技术结论作为当前事实；旧资料仅作为写作风格参考。
@@ -542,7 +544,7 @@ rqt_graph
 ## 12. 待用户确认的问题
 
 1. `models/seam_best.pt` 的训练数据集来源、类别名称、类别编号和是否为单类别检测。
-2. 正式论文中使用的实际硬件平台：底盘型号、相机型号、安装位置、供电和串口设备映射。
+2. 正式论文中使用的实际硬件平台细节：麦克纳姆轮全向底盘的具体型号、相机型号、安装位置、供电和串口设备映射。
 3. 运行时 `BASE_TYPE`、`CAMERA_TYPE`、`target_class_id`、`conf_thres` 等参数的真实取值。
 4. 是否已有可作为论文证据的实机运行截图、`/seam_center` 回显、`/cmd_vel` 回显、`/result_image` 截图和跟踪视频。
 5. 是否需要把 Gazebo seam world 作为正式仿真实验；如果需要，需要补充仿真运行截图、话题记录和结果分析。
