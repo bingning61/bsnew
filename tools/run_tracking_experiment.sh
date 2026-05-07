@@ -11,7 +11,9 @@ OUT_ROOT="${REPO_ROOT}/experiment_records"
 STARTUP_WAIT="${STARTUP_WAIT:-25}"
 CENTER_READY_TIMEOUT="${CENTER_READY_TIMEOUT:-15}"
 SKIP_BUILD="${SKIP_BUILD:-0}"
-RECORD_TIME_MODE="${RECORD_TIME_MODE:-sim}"
+RECORD_TIME_MODE="${RECORD_TIME_MODE:-wall}"
+PLOT_TIME_AXIS="${PLOT_TIME_AXIS:-wall}"
+PUBLISH_RESULT_IMAGE="${PUBLISH_RESULT_IMAGE:-false}"
 SPAWN_X="${SPAWN_X:--2.9}"
 SPAWN_Y="${SPAWN_Y:-0.0}"
 SPAWN_YAW="${SPAWN_YAW:-0.35}"
@@ -46,6 +48,9 @@ Examples:
 Environment:
   STARTUP_WAIT=25          seconds to wait after Gazebo and YOLO launch
   CENTER_READY_TIMEOUT=15  seconds to wait for the first valid /seam_center
+  RECORD_TIME_MODE=wall    keep wall for VM runs; ros is diagnostic only
+  PLOT_TIME_AXIS=wall      plot by wall_time; use ros only for diagnostics
+  PUBLISH_RESULT_IMAGE=false  reduce CPU load during experiments
   SKIP_BUILD=1             skip catkin_make
 EOF
 }
@@ -122,41 +127,6 @@ is_positive_int() {
     esac
 }
 
-read_clock_seconds() {
-    local line secs nsecs
-    line="$(timeout 3s rostopic echo -n 1 /clock 2>/dev/null | awk '
-        $1 == "secs:" {secs=$2}
-        $1 == "nsecs:" {nsecs=$2}
-        secs != "" && nsecs != "" {
-            printf "%s.%09d\n", secs, nsecs
-            exit
-        }')"
-    if [ -n "$line" ]; then
-        printf "%s\n" "$line"
-        return 0
-    fi
-    return 1
-}
-
-wait_sim_seconds() {
-    local duration start now elapsed wall_start wall_elapsed
-    start="$(read_clock_seconds)" || return 1
-    wall_start="$(date +%s)"
-    while true; do
-        now="$(read_clock_seconds)" || return 1
-        elapsed="$(awk -v now="$now" -v start="$start" 'BEGIN { printf "%.3f", now - start }')"
-        if awk -v elapsed="$elapsed" -v duration="$duration" 'BEGIN { exit !(elapsed >= duration) }'; then
-            break
-        fi
-        wall_elapsed=$(( $(date +%s) - wall_start ))
-        if [ "$wall_elapsed" -gt $((duration * 3 + 30)) ]; then
-            echo "Sim time did not advance enough; falling back to wall-time recording." >&2
-            return 1
-        fi
-        sleep 0.5
-    done
-}
-
 check_inputs() {
     if [ ! -d "$REPO_ROOT" ]; then
         echo "Repository not found: ${REPO_ROOT}" >&2
@@ -193,13 +163,27 @@ check_inputs() {
         echo "CENTER_READY_TIMEOUT must be a positive integer, got: ${CENTER_READY_TIMEOUT}" >&2
         exit 2
     fi
+    case "$RECORD_TIME_MODE" in
+        wall|ros) ;;
+        *)
+            echo "RECORD_TIME_MODE must be wall or ros; got: ${RECORD_TIME_MODE}" >&2
+            exit 2
+            ;;
+    esac
+    case "$PLOT_TIME_AXIS" in
+        auto|wall|ros|legacy) ;;
+        *)
+            echo "PLOT_TIME_AXIS must be auto, wall, ros, or legacy; got: ${PLOT_TIME_AXIS}" >&2
+            exit 2
+            ;;
+    esac
 }
 
 PIDS_TO_CLEAN=""
 LAUNCH_PID=""
 CONTROLLER_PID=""
-CMD_PID=""
-CENTER_PID=""
+RECORDER_PID=""
+RECORDER_STATUS=0
 
 cleanup() {
     set +e
@@ -232,6 +216,8 @@ record_seconds=${RECORD_SECONDS}
 startup_wait=${STARTUP_WAIT}
 center_ready_timeout=${CENTER_READY_TIMEOUT}
 record_time_mode=${RECORD_TIME_MODE}
+plot_time_axis=${PLOT_TIME_AXIS}
+publish_result_image=${PUBLISH_RESULT_IMAGE}
 model_path=${MODEL_PATH}
 yolov5_repo_path=${YOLOV5_REPO}
 world_name=${WORLD_PATH}
@@ -284,6 +270,7 @@ EOF
         device:=cpu \
         conf_threshold:="$CONF_THRESHOLD" \
         target_class_id:="$TARGET_CLASS_ID" \
+        publish_result_image:="$PUBLISH_RESULT_IMAGE" \
         Kp:="$Kp" \
         Ki:="$Ki" \
         dead_zone:="$dead_zone" \
@@ -309,13 +296,17 @@ EOF
         echo "The experiment will continue for diagnosis, but curves may show invalid detection only." >&2
     fi
 
-    rostopic echo -p /cmd_vel > "${OUT_DIR}/cmd_vel.csv" &
-    CMD_PID=$!
-    PIDS_TO_CLEAN="${PIDS_TO_CLEAN} ${CMD_PID}"
+    echo "Starting recorder before controller so the first velocity commands are captured."
+    python3 "${REPO_ROOT}/tools/record_tracking_data.py" \
+        --out-dir "$OUT_DIR" \
+        --duration-wall "$RECORD_SECONDS" \
+        --cmd-topic /cmd_vel \
+        --center-topic /seam_center \
+        --record-clock \
+        >> "${OUT_DIR}/recorder.log" 2>&1 &
+    RECORDER_PID=$!
 
-    rostopic echo -p /seam_center > "${OUT_DIR}/seam_center.csv" &
-    CENTER_PID=$!
-    PIDS_TO_CLEAN="${PIDS_TO_CLEAN} ${CENTER_PID}"
+    sleep 1
 
     roslaunch robot_vision gazebo_seam_tracking.launch \
         start_gazebo:=false \
@@ -337,11 +328,15 @@ EOF
     PIDS_TO_CLEAN="${PIDS_TO_CLEAN} ${CONTROLLER_PID}"
 
     echo "controller roslaunch pid: ${CONTROLLER_PID}"
-    echo "Recording /cmd_vel and /seam_center for ${RECORD_SECONDS}s (${RECORD_TIME_MODE} time)..."
-    if [ "$RECORD_TIME_MODE" = "sim" ]; then
-        wait_sim_seconds "$RECORD_SECONDS" || sleep "$RECORD_SECONDS"
-    else
-        sleep "$RECORD_SECONDS"
+    echo "Recording /cmd_vel and /seam_center for ${RECORD_SECONDS}s (${RECORD_TIME_MODE} duration, ${PLOT_TIME_AXIS} plot axis)..."
+    if [ "$RECORD_TIME_MODE" = "ros" ]; then
+        echo "Warning: RECORD_TIME_MODE=ros is diagnostic only; the recorder still runs for wall seconds to avoid VM sim-time stalls." >&2
+    fi
+    wait "$RECORDER_PID" || RECORDER_STATUS=$?
+
+    if [ "$RECORDER_STATUS" != "0" ]; then
+        echo "Recorder failed with status ${RECORDER_STATUS}. See ${OUT_DIR}/recorder.log" >&2
+        exit "$RECORDER_STATUS"
     fi
 
     cleanup
@@ -352,7 +347,9 @@ EOF
         --cmd-vel "${OUT_DIR}/cmd_vel.csv" \
         --seam-center "${OUT_DIR}/seam_center.csv" \
         --out-dir "$OUT_DIR" \
-        --name "$EXPERIMENT_NAME"
+        --name "$EXPERIMENT_NAME" \
+        --time-axis "$PLOT_TIME_AXIS" \
+        --clock "${OUT_DIR}/clock.csv"
 
     echo
     echo "Experiment finished."

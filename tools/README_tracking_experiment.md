@@ -59,6 +59,10 @@ STARTUP_WAIT=25 bash tools/run_tracking_experiment.sh opt_kp06 30
 CENTER_READY_TIMEOUT=20 bash tools/run_tracking_experiment.sh baseline 30
 ```
 
+脚本默认按真实时间记录 30 秒，并按 `wall_time` 绘图。这样即使虚拟机中 Gazebo 仿真时间推进较慢，图片横坐标也会显示真实记录时长。若需要诊断仿真时间，可查看 `summary.txt` 中的 `clock_ros_duration` 和 `sim_realtime_factor_est`。
+
+如无特殊诊断需求，不建议改成 ROS 仿真时间作为记录基准；在虚拟机中仿真时间可能明显慢于真实时间，容易再次出现“运行了 30 秒但图上只有几秒”的现象。
+
 如需临时覆盖初始位姿或检测参数，可使用环境变量，例如：
 
 ```bash
@@ -79,20 +83,24 @@ experiment_records/<实验名>_<时间戳>/
 params.txt
 cmd_vel.csv
 seam_center.csv
+clock.csv
 center_error_curve_clean.png
 cmd_vel_curve_clean.png
 valid_flag_curve_clean.png
 summary.txt
 roslaunch.log
+recorder.log
 ```
 
-脚本当前采用“两段启动”方式：先启动 Gazebo 和 YOLO，等待场景稳定后检查 `/seam_center` 是否出现有效检测，随后开始记录 `/cmd_vel` 与 `/seam_center`，最后再启动控制器。这样可以尽量避免等待阶段车辆已经转丢目标，或记录一开始就全是无效数据。
+脚本当前采用“两段启动”方式：先启动 Gazebo 和 YOLO，等待场景稳定后检查 `/seam_center` 是否出现有效检测；随后启动记录器，再启动控制器。这样可以尽量避免等待阶段车辆已经转丢目标，也能记录控制器启动后的完整速度响应。
 
 ## 图像含义
 
 - `center_error_curve_clean.png`：目标中心归一化偏差曲线。检测无效时不计算误差，避免把 `center_x=-1` 画成异常大误差。
 - `cmd_vel_curve_clean.png`：速度指令曲线，包括 `linear.x / vx`、`linear.y / vy` 和 `angular.z / wz`。
 - `valid_flag_curve_clean.png`：检测有效标志曲线，1 表示检测有效，0 表示检测无效。
+
+默认三张图使用 `wall_time` 作为横坐标。如果横坐标仍明显短于 30 秒，应优先查看 `recorder.log` 是否有异常退出。
 
 ## 参数选择指标
 
@@ -105,6 +113,9 @@ roslaunch.log
 - `angular_sign_changes`：角速度正负切换次数，不宜过多，过多可能说明振荡。
 - `linear_y_max_abs`：当前上层控制应接近 0，用于确认未启用横向速度纠偏。
 - `stop_after_invalid`：检测无效后速度是否接近 0，理想情况为 `yes`；如果没有无效阶段则为 `no_invalid`。
+- `duration_center_axis`、`duration_cmd_vel_axis`：当前绘图时间轴下的数据持续时间，默认应接近 30 秒。
+- `clock_ros_duration`：Gazebo 仿真时间实际推进量。
+- `sim_realtime_factor_est`：仿真时间与真实时间的比值，明显小于 1 表示虚拟机仿真较慢。
 
 最终参数不只看误差最小，还要看速度是否平稳、角速度是否频繁变号、检测无效后是否停止。
 

@@ -42,6 +42,24 @@ def find_column(headers, candidates):
     return None
 
 
+def detect_time_mode(headers, requested):
+    if requested != "auto":
+        return requested
+    if find_column(headers, ["wall_time"]) is not None:
+        return "wall"
+    if find_column(headers, ["ros_time"]) is not None:
+        return "ros"
+    return "legacy"
+
+
+def find_time_column(headers, time_mode):
+    if time_mode == "wall":
+        return find_column(headers, ["wall_time"])
+    if time_mode == "ros":
+        return find_column(headers, ["ros_time"])
+    return find_column(headers, ["time"])
+
+
 def read_csv_rows(path):
     if not os.path.isfile(path):
         fail("CSV file does not exist: {}".format(path))
@@ -70,19 +88,20 @@ def normalize_time(value):
     return value
 
 
-def read_cmd_vel(path):
+def read_cmd_vel(path, requested_time_mode="auto"):
     headers, rows = read_csv_rows(path)
     if not headers:
-        return []
+        return [], requested_time_mode
 
-    time_idx = find_column(headers, ["time"])
+    time_mode = detect_time_mode(headers, requested_time_mode)
+    time_idx = find_time_column(headers, time_mode)
     lx_idx = find_column(headers, ["linear.x", "x"])
     ly_idx = find_column(headers, ["linear.y", "y"])
     az_idx = find_column(headers, ["angular.z", "z"])
 
     missing = []
     if time_idx is None:
-        missing.append("%time")
+        missing.append("{} time".format(time_mode))
     if lx_idx is None:
         missing.append("linear.x")
     if ly_idx is None:
@@ -96,29 +115,32 @@ def read_cmd_vel(path):
     for row in rows:
         if len(row) <= max(time_idx, lx_idx, ly_idx, az_idx):
             continue
-        t = normalize_time(to_float(row[time_idx]))
+        t = to_float(row[time_idx])
+        if time_mode == "legacy":
+            t = normalize_time(t)
         lx = to_float(row[lx_idx])
         ly = to_float(row[ly_idx])
         az = to_float(row[az_idx])
         if t is None or lx is None or ly is None or az is None:
             continue
         data.append({"time": t, "linear_x": lx, "linear_y": ly, "angular_z": az})
-    return data
+    return data, time_mode
 
 
-def read_seam_center(path):
+def read_seam_center(path, requested_time_mode="auto"):
     headers, rows = read_csv_rows(path)
     if not headers:
-        return []
+        return [], requested_time_mode
 
-    time_idx = find_column(headers, ["time"])
+    time_mode = detect_time_mode(headers, requested_time_mode)
+    time_idx = find_time_column(headers, time_mode)
     x_idx = find_column(headers, ["x"])
     y_idx = find_column(headers, ["y"])
     z_idx = find_column(headers, ["z"])
 
     missing = []
     if time_idx is None:
-        missing.append("%time")
+        missing.append("{} time".format(time_mode))
     if x_idx is None:
         missing.append("x")
     if y_idx is None:
@@ -132,7 +154,9 @@ def read_seam_center(path):
     for row in rows:
         if len(row) <= max(time_idx, x_idx, y_idx, z_idx):
             continue
-        t = normalize_time(to_float(row[time_idx]))
+        t = to_float(row[time_idx])
+        if time_mode == "legacy":
+            t = normalize_time(t)
         x = to_float(row[x_idx])
         y = to_float(row[y_idx])
         z = to_float(row[z_idx])
@@ -145,7 +169,7 @@ def read_seam_center(path):
             if ref > 0.0:
                 error = (ref - x) / ref
         data.append({"time": t, "center_x": x, "image_width": y, "valid": valid, "valid_value": z, "error": error})
-    return data
+    return data, time_mode
 
 
 def rel_times(data, t0):
@@ -275,7 +299,49 @@ def plot_valid_flag(plt, center_data, t0, out_path):
     plt.close()
 
 
-def write_summary(path, name, center_data, cmd_data, t0):
+def duration(data):
+    if len(data) < 2:
+        return None
+    return data[-1]["time"] - data[0]["time"]
+
+
+def estimate_sample_rate(data):
+    dur = duration(data)
+    if dur is None or dur <= 0:
+        return None
+    return float(max(0, len(data) - 1)) / dur
+
+
+def read_clock_summary(path):
+    if not path or not os.path.isfile(path):
+        return None, None, None
+    headers, rows = read_csv_rows(path)
+    if not headers or not rows:
+        return None, None, None
+    wall_idx = find_column(headers, ["wall_time"])
+    ros_idx = find_column(headers, ["ros_time"])
+    if wall_idx is None or ros_idx is None:
+        return None, None, None
+    points = []
+    for row in rows:
+        if len(row) <= max(wall_idx, ros_idx):
+            continue
+        wall = to_float(row[wall_idx])
+        ros = to_float(row[ros_idx])
+        if wall is None or ros is None:
+            continue
+        points.append((wall, ros))
+    if len(points) < 2:
+        return None, None, None
+    wall_duration = points[-1][0] - points[0][0]
+    ros_duration = points[-1][1] - points[0][1]
+    factor = None
+    if wall_duration > 0:
+        factor = ros_duration / wall_duration
+    return wall_duration, ros_duration, factor
+
+
+def write_summary(path, name, center_data, cmd_data, t0, time_mode, clock_path=None):
     valid_errors = [abs(item["error"]) for item in center_data if item["valid"] and item["error"] is not None]
     valid_count = len(valid_errors)
     center_count = len(center_data)
@@ -290,10 +356,20 @@ def write_summary(path, name, center_data, cmd_data, t0):
     ly = [item["linear_y"] for item in cmd_data]
     az = [item["angular_z"] for item in cmd_data]
 
+    clock_wall_duration, clock_ros_duration, sim_realtime_factor = read_clock_summary(clock_path)
+
     summary = [
         ("experiment_name", name),
+        ("time_axis", time_mode),
         ("sample_count_center", center_count),
         ("sample_count_cmd_vel", len(cmd_data)),
+        ("duration_center_axis", duration(center_data)),
+        ("duration_cmd_vel_axis", duration(cmd_data)),
+        ("center_sample_rate_hz", estimate_sample_rate(center_data)),
+        ("cmd_vel_sample_rate_hz", estimate_sample_rate(cmd_data)),
+        ("clock_wall_duration", clock_wall_duration),
+        ("clock_ros_duration", clock_ros_duration),
+        ("sim_realtime_factor_est", sim_realtime_factor),
         ("valid_ratio", valid_ratio),
         ("mean_abs_error_valid", mean(valid_errors)),
         ("tail_mean_abs_error_valid", tail_mean),
@@ -316,27 +392,33 @@ def write_summary(path, name, center_data, cmd_data, t0):
 
 def main():
     parser = argparse.ArgumentParser(description="Plot Gazebo seam tracking experiment curves.")
-    parser.add_argument("--cmd-vel", required=True, help="CSV from rostopic echo -p /cmd_vel")
-    parser.add_argument("--seam-center", required=True, help="CSV from rostopic echo -p /seam_center")
+    parser.add_argument("--cmd-vel", required=True, help="CSV from /cmd_vel recorder or rostopic echo -p")
+    parser.add_argument("--seam-center", required=True, help="CSV from /seam_center recorder or rostopic echo -p")
     parser.add_argument("--out-dir", required=True, help="Output directory")
     parser.add_argument("--name", required=True, help="Experiment name")
+    parser.add_argument("--time-axis", default="auto", choices=["auto", "wall", "ros", "legacy"],
+                        help="Time axis for plots. auto prefers wall_time when available.")
+    parser.add_argument("--clock", default="", help="Optional clock.csv from record_tracking_data.py")
     args = parser.parse_args()
 
-    cmd_data = read_cmd_vel(args.cmd_vel)
-    center_data = read_seam_center(args.seam_center)
+    cmd_data, cmd_time_mode = read_cmd_vel(args.cmd_vel, args.time_axis)
+    center_data, center_time_mode = read_seam_center(args.seam_center, args.time_axis)
     if not cmd_data:
         fail("no valid cmd_vel samples parsed from {}".format(args.cmd_vel))
     if not center_data:
         fail("no valid seam_center samples parsed from {}".format(args.seam_center))
 
     os.makedirs(args.out_dir, exist_ok=True)
+    time_mode = cmd_time_mode
+    if cmd_time_mode != center_time_mode:
+        time_mode = "{}+{}".format(cmd_time_mode, center_time_mode)
     t0 = min(cmd_data[0]["time"], center_data[0]["time"])
     plt = import_matplotlib()
 
     plot_center_error(plt, center_data, t0, os.path.join(args.out_dir, "center_error_curve_clean.png"))
     plot_cmd_vel(plt, cmd_data, t0, os.path.join(args.out_dir, "cmd_vel_curve_clean.png"))
     plot_valid_flag(plt, center_data, t0, os.path.join(args.out_dir, "valid_flag_curve_clean.png"))
-    write_summary(os.path.join(args.out_dir, "summary.txt"), args.name, center_data, cmd_data, t0)
+    write_summary(os.path.join(args.out_dir, "summary.txt"), args.name, center_data, cmd_data, t0, time_mode, args.clock)
 
 
 if __name__ == "__main__":
