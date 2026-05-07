@@ -55,9 +55,15 @@ class line_follow:
         self.i_error = 0.0
         self.last_error = 0.0
         self.last_time = rospy.Time(0)
-        self.i_max = 0.3
-        self.Kp = 0.5
-        self.Ki = 0.02
+        self.i_max = float(rospy.get_param('~i_max', 0.3))
+        self.Kp = float(rospy.get_param('~Kp', 0.5))
+        self.Ki = float(rospy.get_param('~Ki', 0.02))
+        self.dead_zone = float(rospy.get_param('~dead_zone', 0.05))
+        self.integral_separation = float(rospy.get_param('~integral_separation', 0.30))
+        self.v0 = float(rospy.get_param('~v0', 0.2))
+        self.vmin = float(rospy.get_param('~vmin', 0.1))
+        self.alpha = float(rospy.get_param('~alpha', 0.5))
+        self.angular_threshold = float(rospy.get_param('~angular_threshold', 0.2))
 
         if self.use_external_center:
             self.center_sub = rospy.Subscriber(self.external_center_topic, Point, self.external_center_callback, queue_size=1)
@@ -179,23 +185,23 @@ class line_follow:
         dt = (now - self.last_time).to_sec()
         if dt <= 0.0 or dt > 1.0:
             dt = 0.1
-        if abs(e) < 0.05:
+        if abs(e) < self.dead_zone:
             # dead zone: target approximately centered, move straight
-            self.twist.linear.x = 0.2
+            self.twist.linear.x = self.v0
         else:
             # P (proportional) term
             angular = self.Kp * e
             # I (integral) term with conditional integration (anti-windup)
-            if abs(e) < 0.30:
+            if abs(e) < self.integral_separation:
                 self.i_error += e * dt
             self.i_error = max(-self.i_max, min(self.i_max, self.i_error))
             angular += self.Ki * self.i_error
             self.twist.angular.z = angular
             # linear speed: reduce on large turns (symmetric, fixed abs())
-            if abs(self.twist.angular.z) < 0.2:
-                self.twist.linear.x = 0.2 - abs(self.twist.angular.z) / 2.0
+            if abs(self.twist.angular.z) < self.angular_threshold:
+                self.twist.linear.x = max(self.vmin, self.v0 - self.alpha * abs(self.twist.angular.z))
             else:
-                self.twist.linear.x = 0.1
+                self.twist.linear.x = self.vmin
         # update PI state for next cycle
         self.last_error = e
         self.last_time = now

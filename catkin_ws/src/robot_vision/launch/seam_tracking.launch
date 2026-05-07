@@ -31,6 +31,17 @@
     <arg name="verbose" default="false" />
     <arg name="external_center_timeout" default="0.5" />
 
+    <!-- Controller parameters. Defaults preserve the original behavior. -->
+    <arg name="Kp" default="0.5" />
+    <arg name="Ki" default="0.02" />
+    <arg name="dead_zone" default="0.05" />
+    <arg name="integral_separation" default="0.30" />
+    <arg name="i_max" default="0.3" />
+    <arg name="v0" default="0.2" />
+    <arg name="vmin" default="0.1" />
+    <arg name="alpha" default="0.5" />
+    <arg name="angular_threshold" default="0.2" />
+
     <!-- Optional chassis bridge -->
     <group if="$(arg run_base_control)">
         <include file="$(find base_control)/launch/base_control.launch">
@@ -79,6 +90,15 @@
         <param name="use_external_center" value="true" />
         <param name="external_center_topic" value="$(arg center_topic)" />
         <param name="external_center_timeout" value="$(arg external_center_timeout)" />
+        <param name="Kp" value="$(arg Kp)" />
+        <param name="Ki" value="$(arg Ki)" />
+        <param name="dead_zone" value="$(arg dead_zone)" />
+        <param name="integral_separation" value="$(arg integral_separation)" />
+        <param name="i_max" value="$(arg i_max)" />
+        <param name="v0" value="$(arg v0)" />
+        <param name="vmin" value="$(arg vmin)" />
+        <param name="alpha" value="$(arg alpha)" />
+        <param name="angular_threshold" value="$(arg angular_threshold)" />
         <remap from="cmd_vel" to="$(arg cmd_vel_topic)" />
     </node>
 </launch>
