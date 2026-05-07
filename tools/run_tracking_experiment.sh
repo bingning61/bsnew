@@ -51,6 +51,8 @@ Environment:
   RECORD_TIME_MODE=wall    keep wall for VM runs; ros is diagnostic only
   PLOT_TIME_AXIS=wall      plot by wall_time; use ros only for diagnostics
   PUBLISH_RESULT_IMAGE=false  reduce CPU load during experiments
+  V0=0.30                 override forward speed v0 for this run
+  VMIN=0.15               override minimum forward speed vmin for this run
   SKIP_BUILD=1             skip catkin_make
 EOF
 }
@@ -125,6 +127,33 @@ is_positive_int() {
         ''|*[!0-9]*) return 1 ;;
         *) [ "$1" -gt 0 ] ;;
     esac
+}
+
+is_positive_number() {
+    awk -v value="$1" 'BEGIN {
+        if (value ~ /^([0-9]+([.][0-9]*)?|[.][0-9]+)$/ && value + 0 > 0) {
+            exit 0
+        }
+        exit 1
+    }'
+}
+
+apply_env_overrides() {
+    if [ -n "${V0:-}" ]; then
+        if ! is_positive_number "$V0"; then
+            echo "V0 must be a positive number, got: ${V0}" >&2
+            exit 2
+        fi
+        v0="$V0"
+    fi
+
+    if [ -n "${VMIN:-}" ]; then
+        if ! is_positive_number "$VMIN"; then
+            echo "VMIN must be a positive number, got: ${VMIN}" >&2
+            exit 2
+        fi
+        vmin="$VMIN"
+    fi
 }
 
 check_inputs() {
@@ -204,6 +233,7 @@ trap cleanup EXIT INT TERM
 
 main() {
     set_params
+    apply_env_overrides
     check_inputs
 
     TIMESTAMP="$(date +%Y%m%d_%H%M%S)"

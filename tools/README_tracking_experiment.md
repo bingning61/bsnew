@@ -69,6 +69,13 @@ CENTER_READY_TIMEOUT=20 bash tools/run_tracking_experiment.sh baseline 30
 SPAWN_X=-2.9 SPAWN_YAW=0.35 CONF_THRESHOLD=0.1 bash tools/run_tracking_experiment.sh baseline 30
 ```
 
+如需在不修改控制源码的前提下临时提高前向速度，可覆盖 `v0` 和 `vmin`，例如：
+
+```bash
+V0=0.30 VMIN=0.15 STARTUP_WAIT=25 CENTER_READY_TIMEOUT=20 SKIP_BUILD=1 \
+bash tools/run_tracking_experiment.sh baseline 60
+```
+
 ## 输出目录
 
 每次运行会生成：
