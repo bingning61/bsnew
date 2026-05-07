@@ -43,3 +43,9 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Local literature/reference folder
+文献/
+
+# Local chassis/controller reference materials
+二代控制器BD_BASE_硬件资料及代码-Omni/
