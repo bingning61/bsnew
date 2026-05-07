@@ -8,8 +8,10 @@ MODEL_PATH="${REPO_ROOT}/models/best_curve_bg_thin_real.pt"
 YOLOV5_REPO="${REPO_ROOT}/yolov5"
 WORLD_PATH="${CATKIN_WS}/src/nanoomni_description/worlds/seam_world_texture_half_width.world"
 OUT_ROOT="${REPO_ROOT}/experiment_records"
-STARTUP_WAIT="${STARTUP_WAIT:-12}"
+STARTUP_WAIT="${STARTUP_WAIT:-25}"
+CENTER_READY_TIMEOUT="${CENTER_READY_TIMEOUT:-15}"
 SKIP_BUILD="${SKIP_BUILD:-0}"
+RECORD_TIME_MODE="${RECORD_TIME_MODE:-sim}"
 SPAWN_X="${SPAWN_X:--2.9}"
 SPAWN_Y="${SPAWN_Y:-0.0}"
 SPAWN_YAW="${SPAWN_YAW:-0.35}"
@@ -32,18 +34,19 @@ angular_threshold=""
 usage() {
     cat <<'EOF'
 Usage:
-  bash tools/run_tracking_experiment.sh <baseline|opt_kp07|opt_kp08|slow_v016> [record_seconds]
+  bash tools/run_tracking_experiment.sh <baseline|opt_kp06|opt_kp065|slow_v016> [record_seconds]
 
 Examples:
   cd /home/bn/bsnew
   bash tools/run_tracking_experiment.sh baseline 30
-  bash tools/run_tracking_experiment.sh opt_kp07 30
-  bash tools/run_tracking_experiment.sh opt_kp08 30
+  bash tools/run_tracking_experiment.sh opt_kp06 30
+  bash tools/run_tracking_experiment.sh opt_kp065 30
   bash tools/run_tracking_experiment.sh slow_v016 30
 
 Environment:
-  STARTUP_WAIT=12   seconds to wait after roslaunch before recording
-  SKIP_BUILD=1      skip catkin_make
+  STARTUP_WAIT=25          seconds to wait after Gazebo and YOLO launch
+  CENTER_READY_TIMEOUT=15  seconds to wait for the first valid /seam_center
+  SKIP_BUILD=1             skip catkin_make
 EOF
 }
 
@@ -53,17 +56,23 @@ set_params() {
             Kp="0.5"; Ki="0.02"; dead_zone="0.05"; integral_separation="0.30"
             i_max="0.3"; v0="0.2"; vmin="0.1"; alpha="0.5"; angular_threshold="0.2"
             ;;
-        opt_kp07)
-            Kp="0.7"; Ki="0.04"; dead_zone="0.04"; integral_separation="0.30"
-            i_max="0.4"; v0="0.18"; vmin="0.08"; alpha="0.7"; angular_threshold="0.2"
+        opt_kp06)
+            Kp="0.6"; Ki="0.025"; dead_zone="0.045"; integral_separation="0.30"
+            i_max="0.35"; v0="0.18"; vmin="0.08"; alpha="0.6"; angular_threshold="0.2"
             ;;
-        opt_kp08)
-            Kp="0.8"; Ki="0.04"; dead_zone="0.04"; integral_separation="0.30"
-            i_max="0.4"; v0="0.18"; vmin="0.08"; alpha="0.7"; angular_threshold="0.2"
+        opt_kp065)
+            Kp="0.65"; Ki="0.03"; dead_zone="0.045"; integral_separation="0.30"
+            i_max="0.35"; v0="0.17"; vmin="0.08"; alpha="0.65"; angular_threshold="0.2"
             ;;
         slow_v016)
-            Kp="0.7"; Ki="0.04"; dead_zone="0.04"; integral_separation="0.30"
-            i_max="0.4"; v0="0.16"; vmin="0.08"; alpha="0.7"; angular_threshold="0.2"
+            Kp="0.6"; Ki="0.025"; dead_zone="0.045"; integral_separation="0.30"
+            i_max="0.35"; v0="0.16"; vmin="0.08"; alpha="0.6"; angular_threshold="0.2"
+            ;;
+        opt_kp07)
+            echo "Warning: opt_kp07 is kept only as a compatibility alias; using the milder opt_kp065 parameters." >&2
+            EXPERIMENT_NAME="opt_kp065"
+            Kp="0.65"; Ki="0.03"; dead_zone="0.045"; integral_separation="0.30"
+            i_max="0.35"; v0="0.17"; vmin="0.08"; alpha="0.65"; angular_threshold="0.2"
             ;;
         -h|--help|help)
             usage
@@ -77,11 +86,75 @@ set_params() {
     esac
 }
 
+read_seam_center_valid() {
+    local valid
+    valid="$(timeout 3s rostopic echo -n 1 /seam_center 2>/dev/null | awk '
+        $1 == "z:" {
+            if (($2 + 0.0) > 0.5) {
+                print "yes"
+            } else {
+                print "no"
+            }
+            exit
+        }')"
+    [ "$valid" = "yes" ]
+}
+
+wait_for_valid_center() {
+    local wall_start wall_elapsed
+    wall_start="$(date +%s)"
+    while true; do
+        if read_seam_center_valid; then
+            return 0
+        fi
+        wall_elapsed=$(( $(date +%s) - wall_start ))
+        if [ "$wall_elapsed" -ge "$CENTER_READY_TIMEOUT" ]; then
+            return 1
+        fi
+        sleep 1
+    done
+}
+
 is_positive_int() {
     case "$1" in
         ''|*[!0-9]*) return 1 ;;
         *) [ "$1" -gt 0 ] ;;
     esac
+}
+
+read_clock_seconds() {
+    local line secs nsecs
+    line="$(timeout 3s rostopic echo -n 1 /clock 2>/dev/null | awk '
+        $1 == "secs:" {secs=$2}
+        $1 == "nsecs:" {nsecs=$2}
+        secs != "" && nsecs != "" {
+            printf "%s.%09d\n", secs, nsecs
+            exit
+        }')"
+    if [ -n "$line" ]; then
+        printf "%s\n" "$line"
+        return 0
+    fi
+    return 1
+}
+
+wait_sim_seconds() {
+    local duration start now elapsed wall_start wall_elapsed
+    start="$(read_clock_seconds)" || return 1
+    wall_start="$(date +%s)"
+    while true; do
+        now="$(read_clock_seconds)" || return 1
+        elapsed="$(awk -v now="$now" -v start="$start" 'BEGIN { printf "%.3f", now - start }')"
+        if awk -v elapsed="$elapsed" -v duration="$duration" 'BEGIN { exit !(elapsed >= duration) }'; then
+            break
+        fi
+        wall_elapsed=$(( $(date +%s) - wall_start ))
+        if [ "$wall_elapsed" -gt $((duration * 3 + 30)) ]; then
+            echo "Sim time did not advance enough; falling back to wall-time recording." >&2
+            return 1
+        fi
+        sleep 0.5
+    done
 }
 
 check_inputs() {
@@ -116,10 +189,15 @@ check_inputs() {
         echo "STARTUP_WAIT must be a positive integer, got: ${STARTUP_WAIT}" >&2
         exit 2
     fi
+    if ! is_positive_int "$CENTER_READY_TIMEOUT"; then
+        echo "CENTER_READY_TIMEOUT must be a positive integer, got: ${CENTER_READY_TIMEOUT}" >&2
+        exit 2
+    fi
 }
 
 PIDS_TO_CLEAN=""
 LAUNCH_PID=""
+CONTROLLER_PID=""
 CMD_PID=""
 CENTER_PID=""
 
@@ -152,6 +230,8 @@ main() {
 experiment_name=${EXPERIMENT_NAME}
 record_seconds=${RECORD_SECONDS}
 startup_wait=${STARTUP_WAIT}
+center_ready_timeout=${CENTER_READY_TIMEOUT}
+record_time_mode=${RECORD_TIME_MODE}
 model_path=${MODEL_PATH}
 yolov5_repo_path=${YOLOV5_REPO}
 world_name=${WORLD_PATH}
@@ -194,6 +274,7 @@ EOF
     fi
 
     roslaunch robot_vision gazebo_seam_tracking.launch \
+        start_controller:=false \
         world_name:="$WORLD_PATH" \
         spawn_x:="$SPAWN_X" \
         spawn_y:="$SPAWN_Y" \
@@ -217,8 +298,16 @@ EOF
     PIDS_TO_CLEAN="${PIDS_TO_CLEAN} ${LAUNCH_PID}"
 
     echo "roslaunch pid: ${LAUNCH_PID}"
-    echo "Waiting ${STARTUP_WAIT}s for Gazebo, YOLO, and controller startup..."
+    echo "Waiting ${STARTUP_WAIT}s for Gazebo and YOLO startup. Controller is not started yet."
     sleep "$STARTUP_WAIT"
+
+    echo "Checking whether /seam_center is valid before starting the controller..."
+    if wait_for_valid_center; then
+        echo "Valid /seam_center detected. Start recording and then start controller."
+    else
+        echo "Warning: no valid /seam_center detected within ${CENTER_READY_TIMEOUT}s." >&2
+        echo "The experiment will continue for diagnosis, but curves may show invalid detection only." >&2
+    fi
 
     rostopic echo -p /cmd_vel > "${OUT_DIR}/cmd_vel.csv" &
     CMD_PID=$!
@@ -228,8 +317,32 @@ EOF
     CENTER_PID=$!
     PIDS_TO_CLEAN="${PIDS_TO_CLEAN} ${CENTER_PID}"
 
-    echo "Recording /cmd_vel and /seam_center for ${RECORD_SECONDS}s..."
-    sleep "$RECORD_SECONDS"
+    roslaunch robot_vision gazebo_seam_tracking.launch \
+        start_gazebo:=false \
+        start_yolo:=false \
+        start_controller:=true \
+        center_topic:=/seam_center \
+        cmd_vel_topic:=/cmd_vel \
+        Kp:="$Kp" \
+        Ki:="$Ki" \
+        dead_zone:="$dead_zone" \
+        integral_separation:="$integral_separation" \
+        i_max:="$i_max" \
+        v0:="$v0" \
+        vmin:="$vmin" \
+        alpha:="$alpha" \
+        angular_threshold:="$angular_threshold" \
+        >> "${OUT_DIR}/roslaunch.log" 2>&1 &
+    CONTROLLER_PID=$!
+    PIDS_TO_CLEAN="${PIDS_TO_CLEAN} ${CONTROLLER_PID}"
+
+    echo "controller roslaunch pid: ${CONTROLLER_PID}"
+    echo "Recording /cmd_vel and /seam_center for ${RECORD_SECONDS}s (${RECORD_TIME_MODE} time)..."
+    if [ "$RECORD_TIME_MODE" = "sim" ]; then
+        wait_sim_seconds "$RECORD_SECONDS" || sleep "$RECORD_SECONDS"
+    else
+        sleep "$RECORD_SECONDS"
+    fi
 
     cleanup
     trap - EXIT INT TERM

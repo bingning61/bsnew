@@ -60,6 +60,16 @@ def to_float(value):
         return None
 
 
+def normalize_time(value):
+    if value is None:
+        return None
+    # rostopic echo -p commonly writes ROS time in nanoseconds.
+    # Convert large integer-like timestamps to seconds for readable plots.
+    if abs(value) > 1.0e6:
+        return value / 1.0e9
+    return value
+
+
 def read_cmd_vel(path):
     headers, rows = read_csv_rows(path)
     if not headers:
@@ -86,7 +96,7 @@ def read_cmd_vel(path):
     for row in rows:
         if len(row) <= max(time_idx, lx_idx, ly_idx, az_idx):
             continue
-        t = to_float(row[time_idx])
+        t = normalize_time(to_float(row[time_idx]))
         lx = to_float(row[lx_idx])
         ly = to_float(row[ly_idx])
         az = to_float(row[az_idx])
@@ -122,7 +132,7 @@ def read_seam_center(path):
     for row in rows:
         if len(row) <= max(time_idx, x_idx, y_idx, z_idx):
             continue
-        t = to_float(row[time_idx])
+        t = normalize_time(to_float(row[time_idx]))
         x = to_float(row[x_idx])
         y = to_float(row[y_idx])
         z = to_float(row[z_idx])

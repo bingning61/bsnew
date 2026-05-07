@@ -7,8 +7,8 @@
 ```bash
 cd /home/bn/bsnew
 bash tools/run_tracking_experiment.sh baseline 30
-bash tools/run_tracking_experiment.sh opt_kp07 30
-bash tools/run_tracking_experiment.sh opt_kp08 30
+bash tools/run_tracking_experiment.sh opt_kp06 30
+bash tools/run_tracking_experiment.sh opt_kp065 30
 bash tools/run_tracking_experiment.sh slow_v016 30
 ```
 
@@ -44,13 +44,19 @@ device=cpu
 如果不想每次运行前编译，可使用：
 
 ```bash
-SKIP_BUILD=1 bash tools/run_tracking_experiment.sh opt_kp07 30
+SKIP_BUILD=1 bash tools/run_tracking_experiment.sh opt_kp06 30
 ```
 
 如果 Gazebo 和 YOLO 启动较慢，可延长等待时间：
 
 ```bash
-STARTUP_WAIT=20 bash tools/run_tracking_experiment.sh opt_kp07 30
+STARTUP_WAIT=25 bash tools/run_tracking_experiment.sh opt_kp06 30
+```
+
+如果虚拟机里话题启动较慢，想多给一点“检测先准备好”的时间，可设置：
+
+```bash
+CENTER_READY_TIMEOUT=20 bash tools/run_tracking_experiment.sh baseline 30
 ```
 
 如需临时覆盖初始位姿或检测参数，可使用环境变量，例如：
@@ -80,6 +86,8 @@ summary.txt
 roslaunch.log
 ```
 
+脚本当前采用“两段启动”方式：先启动 Gazebo 和 YOLO，等待场景稳定后检查 `/seam_center` 是否出现有效检测，随后开始记录 `/cmd_vel` 与 `/seam_center`，最后再启动控制器。这样可以尽量避免等待阶段车辆已经转丢目标，或记录一开始就全是无效数据。
+
 ## 图像含义
 
 - `center_error_curve_clean.png`：目标中心归一化偏差曲线。检测无效时不计算误差，避免把 `center_x=-1` 画成异常大误差。
@@ -99,6 +107,13 @@ roslaunch.log
 - `stop_after_invalid`：检测无效后速度是否接近 0，理想情况为 `yes`；如果没有无效阶段则为 `no_invalid`。
 
 最终参数不只看误差最小，还要看速度是否平稳、角速度是否频繁变号、检测无效后是否停止。
+
+建议优先比较这四组温和参数：
+
+- `baseline`：原始基准参数。
+- `opt_kp06`：小幅提高角速度响应，整体仍偏稳。
+- `opt_kp065`：在 `opt_kp06` 基础上略增强修正能力，但避免过激转向。
+- `slow_v016`：降低前向速度，观察残余偏差是否进一步收敛。
 
 ## 当前控制边界
 
