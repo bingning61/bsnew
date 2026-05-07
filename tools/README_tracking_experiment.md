@@ -12,10 +12,27 @@ bash tools/run_tracking_experiment.sh opt_kp08 30
 bash tools/run_tracking_experiment.sh slow_v016 30
 ```
 
-第二个参数为记录时长，单位为秒，默认 30 秒。默认权重为：
+第二个参数为记录时长，单位为秒，默认 30 秒。脚本默认复现半宽纹理焊缝场景，默认权重为：
 
 ```text
-/home/bn/bsnew/models/best_curve_bg_thin_finetune.pt
+/home/bn/bsnew/models/best_curve_bg_thin_real.pt
+```
+
+默认 Gazebo world 为：
+
+```text
+/home/bn/bsnew/catkin_ws/src/nanoomni_description/worlds/seam_world_texture_half_width.world
+```
+
+默认初始位姿和检测参数为：
+
+```text
+spawn_x=-2.9
+spawn_y=0.0
+spawn_yaw=0.35
+conf_threshold=0.1
+target_class_id=-1
+device=cpu
 ```
 
 默认 YOLOv5 路径为：
@@ -34,6 +51,12 @@ SKIP_BUILD=1 bash tools/run_tracking_experiment.sh opt_kp07 30
 
 ```bash
 STARTUP_WAIT=20 bash tools/run_tracking_experiment.sh opt_kp07 30
+```
+
+如需临时覆盖初始位姿或检测参数，可使用环境变量，例如：
+
+```bash
+SPAWN_X=-2.9 SPAWN_YAW=0.35 CONF_THRESHOLD=0.1 bash tools/run_tracking_experiment.sh baseline 30
 ```
 
 ## 输出目录

@@ -4,11 +4,17 @@ set -euo pipefail
 REPO_ROOT="/home/bn/bsnew"
 ROS_SETUP="/opt/ros/melodic/setup.bash"
 CATKIN_WS="${REPO_ROOT}/catkin_ws"
-MODEL_PATH="${REPO_ROOT}/models/best_curve_bg_thin_finetune.pt"
+MODEL_PATH="${REPO_ROOT}/models/best_curve_bg_thin_real.pt"
 YOLOV5_REPO="${REPO_ROOT}/yolov5"
+WORLD_PATH="${CATKIN_WS}/src/nanoomni_description/worlds/seam_world_texture_half_width.world"
 OUT_ROOT="${REPO_ROOT}/experiment_records"
 STARTUP_WAIT="${STARTUP_WAIT:-12}"
 SKIP_BUILD="${SKIP_BUILD:-0}"
+SPAWN_X="${SPAWN_X:--2.9}"
+SPAWN_Y="${SPAWN_Y:-0.0}"
+SPAWN_YAW="${SPAWN_YAW:-0.35}"
+CONF_THRESHOLD="${CONF_THRESHOLD:-0.1}"
+TARGET_CLASS_ID="${TARGET_CLASS_ID:--1}"
 
 EXPERIMENT_NAME="${1:-baseline}"
 RECORD_SECONDS="${2:-30}"
@@ -94,6 +100,10 @@ check_inputs() {
         echo "Model weight not found: ${MODEL_PATH}" >&2
         exit 1
     fi
+    if [ ! -f "$WORLD_PATH" ]; then
+        echo "Gazebo world not found: ${WORLD_PATH}" >&2
+        exit 1
+    fi
     if [ ! -d "$YOLOV5_REPO" ]; then
         echo "YOLOv5 repository not found: ${YOLOV5_REPO}" >&2
         exit 1
@@ -144,6 +154,12 @@ record_seconds=${RECORD_SECONDS}
 startup_wait=${STARTUP_WAIT}
 model_path=${MODEL_PATH}
 yolov5_repo_path=${YOLOV5_REPO}
+world_name=${WORLD_PATH}
+spawn_x=${SPAWN_X}
+spawn_y=${SPAWN_Y}
+spawn_yaw=${SPAWN_YAW}
+conf_threshold=${CONF_THRESHOLD}
+target_class_id=${TARGET_CLASS_ID}
 control_mode=vx_plus_wz_linear_y_zero
 Kp=${Kp}
 Ki=${Ki}
@@ -178,9 +194,15 @@ EOF
     fi
 
     roslaunch robot_vision gazebo_seam_tracking.launch \
+        world_name:="$WORLD_PATH" \
+        spawn_x:="$SPAWN_X" \
+        spawn_y:="$SPAWN_Y" \
+        spawn_yaw:="$SPAWN_YAW" \
         model_path:="$MODEL_PATH" \
         yolov5_repo_path:="$YOLOV5_REPO" \
         device:=cpu \
+        conf_threshold:="$CONF_THRESHOLD" \
+        target_class_id:="$TARGET_CLASS_ID" \
         Kp:="$Kp" \
         Ki:="$Ki" \
         dead_zone:="$dead_zone" \
