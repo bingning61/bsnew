@@ -6,7 +6,7 @@ ROS_SETUP="/opt/ros/melodic/setup.bash"
 CATKIN_WS="${REPO_ROOT}/catkin_ws"
 MODEL_PATH="${REPO_ROOT}/models/best_curve_bg_thin_real.pt"
 YOLOV5_REPO="${REPO_ROOT}/yolov5"
-WORLD_PATH="${CATKIN_WS}/src/nanoomni_description/worlds/seam_world_texture_half_width.world"
+WORLD_PATH="${CATKIN_WS}/src/nanoomni_description/worlds/seam_world_texture_half_width_mid_straight.world"
 OUT_ROOT="${REPO_ROOT}/experiment_records"
 STARTUP_WAIT="${STARTUP_WAIT:-25}"
 CENTER_READY_TIMEOUT="${CENTER_READY_TIMEOUT:-15}"
@@ -36,14 +36,14 @@ angular_threshold=""
 usage() {
     cat <<'EOF'
 Usage:
-  bash tools/run_tracking_experiment.sh <baseline|opt_kp06|opt_kp065|slow_v016> [record_seconds]
+  bash tools/run_tracking_experiment_mid_straight.sh <baseline|opt_kp06|opt_kp065|slow_v016> [record_seconds]
 
 Examples:
   cd /home/bn/bsnew
-  bash tools/run_tracking_experiment.sh baseline 180
-  bash tools/run_tracking_experiment.sh opt_kp06 180
-  bash tools/run_tracking_experiment.sh opt_kp065 180
-  bash tools/run_tracking_experiment.sh slow_v016 180
+  bash tools/run_tracking_experiment_mid_straight.sh baseline 180
+  bash tools/run_tracking_experiment_mid_straight.sh opt_kp06 180
+  bash tools/run_tracking_experiment_mid_straight.sh opt_kp065 180
+  bash tools/run_tracking_experiment_mid_straight.sh slow_v016 180
 
 Environment:
   STARTUP_WAIT=25          seconds to wait after Gazebo and YOLO launch
