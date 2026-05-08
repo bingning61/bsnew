@@ -508,7 +508,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_21">
-          <pose>-0.750 -0.002 0.004 0 0 -0.180</pose>
+          <pose>-0.750 -0.002 0.004 0 0 -0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -528,7 +528,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_22">
-          <pose>-0.667 -0.008 0.004 0 0 -0.120</pose>
+          <pose>-0.667 -0.032 0.004 0 0 -0.342</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -548,7 +548,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_23">
-          <pose>-0.583 -0.012 0.004 0 0 -0.060</pose>
+          <pose>-0.583 -0.061 0.004 0 0 -0.330</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -568,7 +568,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_24">
-          <pose>-0.500 -0.012 0.004 0 0 0.000</pose>
+          <pose>-0.500 -0.089 0.004 0 0 -0.312</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -588,7 +588,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_25">
-          <pose>-0.417 -0.010 0.004 0 0 0.000</pose>
+          <pose>-0.417 -0.114 0.004 0 0 -0.287</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -608,7 +608,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_26">
-          <pose>-0.333 -0.008 0.004 0 0 0.000</pose>
+          <pose>-0.333 -0.138 0.004 0 0 -0.256</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -628,7 +628,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_27">
-          <pose>-0.250 -0.006 0.004 0 0 0.000</pose>
+          <pose>-0.250 -0.158 0.004 0 0 -0.218</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -648,7 +648,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_28">
-          <pose>-0.167 -0.004 0.004 0 0 0.000</pose>
+          <pose>-0.167 -0.174 0.004 0 0 -0.175</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -668,7 +668,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_29">
-          <pose>-0.083 -0.002 0.004 0 0 0.000</pose>
+          <pose>-0.083 -0.187 0.004 0 0 -0.127</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -688,7 +688,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_30">
-          <pose>0.000 0.000 0.004 0 0 0.000</pose>
+          <pose>0.000 -0.196 0.004 0 0 -0.076</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -708,7 +708,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_31">
-          <pose>0.083 0.000 0.004 0 0 0.000</pose>
+          <pose>0.083 -0.200 0.004 0 0 -0.022</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -728,7 +728,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_32">
-          <pose>0.167 0.000 0.004 0 0 0.000</pose>
+          <pose>0.167 -0.199 0.004 0 0 0.031</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -748,7 +748,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_33">
-          <pose>0.250 0.000 0.004 0 0 0.000</pose>
+          <pose>0.250 -0.194 0.004 0 0 0.085</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -768,7 +768,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_34">
-          <pose>0.333 0.000 0.004 0 0 0.000</pose>
+          <pose>0.333 -0.185 0.004 0 0 0.135</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -788,7 +788,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_35">
-          <pose>0.417 0.000 0.004 0 0 0.000</pose>
+          <pose>0.417 -0.172 0.004 0 0 0.182</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -808,7 +808,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_36">
-          <pose>0.500 0.000 0.004 0 0 0.000</pose>
+          <pose>0.500 -0.155 0.004 0 0 0.225</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -828,7 +828,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_37">
-          <pose>0.583 0.002 0.004 0 0 0.000</pose>
+          <pose>0.583 -0.134 0.004 0 0 0.261</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -848,7 +848,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_38">
-          <pose>0.667 0.006 0.004 0 0 0.060</pose>
+          <pose>0.667 -0.110 0.004 0 0 0.292</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -868,7 +868,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_39">
-          <pose>0.750 0.012 0.004 0 0 0.120</pose>
+          <pose>0.750 -0.084 0.004 0 0 0.316</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -888,7 +888,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_40">
-          <pose>0.833 0.020 0.004 0 0 0.180</pose>
+          <pose>0.833 -0.056 0.004 0 0 0.333</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -908,7 +908,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_41">
-          <pose>0.917 0.032 0.004 0 0 0.260</pose>
+          <pose>0.917 -0.027 0.004 0 0 0.343</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -928,7 +928,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_42">
-          <pose>1.000 0.048 0.004 0 0 0.320</pose>
+          <pose>1.000 0.003 0.004 0 0 0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -948,7 +948,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_43">
-          <pose>1.083 0.033 0.004 0 0 0.341</pose>
+          <pose>1.078 0.031 0.004 0 0 0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -968,7 +968,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_44">
-          <pose>1.167 0.062 0.004 0 0 0.330</pose>
+          <pose>1.156 0.059 0.004 0 0 0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -988,7 +988,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_45">
-          <pose>1.250 0.090 0.004 0 0 0.311</pose>
+          <pose>1.234 0.087 0.004 0 0 0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1008,7 +1008,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_46">
-          <pose>1.333 0.116 0.004 0 0 0.286</pose>
+          <pose>1.312 0.116 0.004 0 0 0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1028,7 +1028,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_47">
-          <pose>1.417 0.139 0.004 0 0 0.254</pose>
+          <pose>1.390 0.144 0.004 0 0 0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1048,7 +1048,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_48">
-          <pose>1.500 0.159 0.004 0 0 0.216</pose>
+          <pose>1.468 0.172 0.004 0 0 0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1068,7 +1068,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_49">
-          <pose>1.583 0.175 0.004 0 0 0.172</pose>
+          <pose>1.547 0.200 0.004 0 0 0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1088,7 +1088,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_50">
-          <pose>1.667 0.188 0.004 0 0 0.124</pose>
+          <pose>1.625 0.228 0.004 0 0 0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1108,7 +1108,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_51">
-          <pose>1.750 0.196 0.004 0 0 0.073</pose>
+          <pose>1.703 0.256 0.004 0 0 0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1128,7 +1128,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_52">
-          <pose>1.833 0.200 0.004 0 0 0.019</pose>
+          <pose>1.781 0.284 0.004 0 0 0.346</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1148,7 +1148,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_53">
-          <pose>1.917 0.199 0.004 0 0 -0.034</pose>
+          <pose>1.863 0.300 0.004 0 0 0.047</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1168,7 +1168,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_54">
-          <pose>2.000 0.194 0.004 0 0 -0.087</pose>
+          <pose>1.951 0.294 0.004 0 0 -0.164</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1188,7 +1188,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_55">
-          <pose>2.083 0.185 0.004 0 0 -0.138</pose>
+          <pose>2.044 0.272 0.004 0 0 -0.301</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1208,7 +1208,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_56">
-          <pose>2.167 0.171 0.004 0 0 -0.185</pose>
+          <pose>2.140 0.237 0.004 0 0 -0.383</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1228,7 +1228,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_57">
-          <pose>2.250 0.153 0.004 0 0 -0.227</pose>
+          <pose>2.235 0.196 0.004 0 0 -0.425</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1248,7 +1248,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_58">
-          <pose>2.333 0.133 0.004 0 0 -0.263</pose>
+          <pose>2.328 0.153 0.004 0 0 -0.431</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
@@ -1268,7 +1268,7 @@
           </material>
         </visual>
         <visual name="weld_curve_segment_59">
-          <pose>2.417 0.109 0.004 0 0 -0.293</pose>
+          <pose>2.417 0.114 0.004 0 0 -0.400</pose>
           <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
