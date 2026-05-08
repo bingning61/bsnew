@@ -21,7 +21,7 @@ CONF_THRESHOLD="${CONF_THRESHOLD:-0.1}"
 TARGET_CLASS_ID="${TARGET_CLASS_ID:--1}"
 
 EXPERIMENT_NAME="${1:-baseline}"
-RECORD_SECONDS="${2:-180}"
+RECORD_SECONDS="${2:-210}"
 
 Kp=""
 Ki=""
@@ -40,10 +40,10 @@ Usage:
 
 Examples:
   cd /home/bn/bsnew
-  bash tools/run_tracking_experiment_mid_straight.sh baseline 180
-  bash tools/run_tracking_experiment_mid_straight.sh opt_kp06 180
-  bash tools/run_tracking_experiment_mid_straight.sh opt_kp065 180
-  bash tools/run_tracking_experiment_mid_straight.sh slow_v016 180
+  bash tools/run_tracking_experiment_mid_straight.sh baseline 210
+  bash tools/run_tracking_experiment_mid_straight.sh opt_kp06 210
+  bash tools/run_tracking_experiment_mid_straight.sh opt_kp065 210
+  bash tools/run_tracking_experiment_mid_straight.sh slow_v016 210
 
 Environment:
   STARTUP_WAIT=25          seconds to wait after Gazebo and YOLO launch
