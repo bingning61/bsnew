@@ -13,7 +13,7 @@ CENTER_READY_TIMEOUT="${CENTER_READY_TIMEOUT:-15}"
 SKIP_BUILD="${SKIP_BUILD:-0}"
 RECORD_TIME_MODE="${RECORD_TIME_MODE:-wall}"
 PLOT_TIME_AXIS="${PLOT_TIME_AXIS:-wall}"
-PUBLISH_RESULT_IMAGE="${PUBLISH_RESULT_IMAGE:-false}"
+PUBLISH_RESULT_IMAGE="${PUBLISH_RESULT_IMAGE:-true}"
 SPAWN_X="${SPAWN_X:--2.9}"
 SPAWN_Y="${SPAWN_Y:-0.0}"
 SPAWN_YAW="${SPAWN_YAW:-0.35}"
@@ -21,7 +21,7 @@ CONF_THRESHOLD="${CONF_THRESHOLD:-0.1}"
 TARGET_CLASS_ID="${TARGET_CLASS_ID:--1}"
 
 EXPERIMENT_NAME="${1:-baseline}"
-RECORD_SECONDS="${2:-210}"
+RECORD_SECONDS="${2:-}"
 
 Kp=""
 Ki=""
@@ -32,27 +32,32 @@ v0=""
 vmin=""
 alpha=""
 angular_threshold=""
+experiment_type=""
+default_record_seconds=""
 
 usage() {
     cat <<'EOF'
 Usage:
-  bash tools/run_tracking_experiment_mid_straight.sh <baseline|opt_kp06|opt_kp065|slow_v016> [record_seconds]
+  bash tools/run_tracking_experiment_mid_straight.sh <baseline|opt_kp06|opt_kp065|slow_v016|speed_low|speed_mid|speed_high> [record_seconds]
 
 Examples:
   cd /home/bn/bsnew
-  bash tools/run_tracking_experiment_mid_straight.sh baseline 210
-  bash tools/run_tracking_experiment_mid_straight.sh opt_kp06 210
-  bash tools/run_tracking_experiment_mid_straight.sh opt_kp065 210
-  bash tools/run_tracking_experiment_mid_straight.sh slow_v016 210
+  bash tools/run_tracking_experiment_mid_straight.sh baseline 240
+  bash tools/run_tracking_experiment_mid_straight.sh opt_kp06 240
+  bash tools/run_tracking_experiment_mid_straight.sh opt_kp065 240
+  bash tools/run_tracking_experiment_mid_straight.sh slow_v016 240
+  bash tools/run_tracking_experiment_mid_straight.sh speed_low
+  bash tools/run_tracking_experiment_mid_straight.sh speed_mid
+  bash tools/run_tracking_experiment_mid_straight.sh speed_high
 
 Environment:
   STARTUP_WAIT=25          seconds to wait after Gazebo and YOLO launch
   CENTER_READY_TIMEOUT=15  seconds to wait for the first valid /seam_center
   RECORD_TIME_MODE=wall    keep wall for VM runs; ros is diagnostic only
   PLOT_TIME_AXIS=wall      plot by wall_time; use ros only for diagnostics
-  PUBLISH_RESULT_IMAGE=false  reduce CPU load during experiments
-  V0=0.30                 override forward speed v0 for this run
-  VMIN=0.15               override minimum forward speed vmin for this run
+  PUBLISH_RESULT_IMAGE=true   keep /result_image available for manual viewing
+  V0=0.30                    override forward speed v0 for this run
+  VMIN=0.15                  override minimum forward speed vmin for this run
   SKIP_BUILD=1             skip catkin_make
 EOF
 }
@@ -60,24 +65,44 @@ EOF
 set_params() {
     case "$EXPERIMENT_NAME" in
         baseline)
+            experiment_type="parameter_compare"; default_record_seconds="240"
             Kp="0.5"; Ki="0.02"; dead_zone="0.05"; integral_separation="0.30"
             i_max="0.3"; v0="0.30"; vmin="0.15"; alpha="0.5"; angular_threshold="0.2"
             ;;
         opt_kp06)
+            experiment_type="parameter_compare"; default_record_seconds="240"
             Kp="0.6"; Ki="0.025"; dead_zone="0.045"; integral_separation="0.30"
             i_max="0.35"; v0="0.30"; vmin="0.15"; alpha="0.6"; angular_threshold="0.2"
             ;;
         opt_kp065)
+            experiment_type="parameter_compare"; default_record_seconds="240"
             Kp="0.65"; Ki="0.03"; dead_zone="0.045"; integral_separation="0.30"
             i_max="0.35"; v0="0.30"; vmin="0.15"; alpha="0.65"; angular_threshold="0.2"
             ;;
         slow_v016)
+            experiment_type="parameter_compare"; default_record_seconds="240"
             Kp="0.6"; Ki="0.025"; dead_zone="0.045"; integral_separation="0.30"
             i_max="0.35"; v0="0.30"; vmin="0.15"; alpha="0.6"; angular_threshold="0.2"
+            ;;
+        speed_low)
+            experiment_type="speed_compare"; default_record_seconds="360"
+            Kp="0.65"; Ki="0.03"; dead_zone="0.045"; integral_separation="0.30"
+            i_max="0.35"; v0="0.20"; vmin="0.10"; alpha="0.65"; angular_threshold="0.2"
+            ;;
+        speed_mid)
+            experiment_type="speed_compare"; default_record_seconds="288"
+            Kp="0.65"; Ki="0.03"; dead_zone="0.045"; integral_separation="0.30"
+            i_max="0.35"; v0="0.25"; vmin="0.12"; alpha="0.65"; angular_threshold="0.2"
+            ;;
+        speed_high)
+            experiment_type="speed_compare"; default_record_seconds="240"
+            Kp="0.65"; Ki="0.03"; dead_zone="0.045"; integral_separation="0.30"
+            i_max="0.35"; v0="0.30"; vmin="0.15"; alpha="0.65"; angular_threshold="0.2"
             ;;
         opt_kp07)
             echo "Warning: opt_kp07 is kept only as a compatibility alias; using the milder opt_kp065 parameters." >&2
             EXPERIMENT_NAME="opt_kp065"
+            experiment_type="parameter_compare"; default_record_seconds="240"
             Kp="0.65"; Ki="0.03"; dead_zone="0.045"; integral_separation="0.30"
             i_max="0.35"; v0="0.30"; vmin="0.15"; alpha="0.65"; angular_threshold="0.2"
             ;;
@@ -91,6 +116,10 @@ set_params() {
             exit 2
             ;;
     esac
+
+    if [ -z "$RECORD_SECONDS" ]; then
+        RECORD_SECONDS="$default_record_seconds"
+    fi
 }
 
 read_seam_center_valid() {
@@ -242,6 +271,7 @@ main() {
 
     cat > "${OUT_DIR}/params.txt" <<EOF
 experiment_name=${EXPERIMENT_NAME}
+experiment_type=${experiment_type}
 record_seconds=${RECORD_SECONDS}
 startup_wait=${STARTUP_WAIT}
 center_ready_timeout=${CENTER_READY_TIMEOUT}
