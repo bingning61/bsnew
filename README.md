@@ -43,6 +43,20 @@ It starts:
 
 It does not start the old HSV visual front-end.
 
+## Real Robot Deployment And Experiment Logging
+
+For SSH-based deployment to a robot running ROS Noetic, dependency installation, staged hardware tests, rosbag/CSV recording, and curve plotting, see:
+
+```text
+docs/robot_noetic_deployment_and_experiment.md
+```
+
+The helper script for CSV curves is:
+
+```bash
+python3 tools/plot_experiment_curves.py --seam ~/bsnew/experiment_logs/seam_center.csv --cmd ~/bsnew/experiment_logs/cmd_vel.csv --out ~/bsnew/experiment_logs/plots
+```
+
 ## ROS Interfaces
 
 | Topic | Type | Meaning |
